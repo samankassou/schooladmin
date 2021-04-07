@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('mazer/assets/css/bootstrap.css') }}">
-
+    @yield('styles')
     <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/perfect-scrollbar/perfect-scrollbar.css') }}">
     <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('mazer/assets/css/app.css') }}">
@@ -23,7 +23,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="index.html"><img src="{{ asset('mazer/assets/images/logo/logo.png') }}" alt="Logo" srcset=""></a>
+                            <a href="/"><img src="{{ asset('mazer/assets/images/logo/logo.png') }}" alt="Logo" srcset=""></a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -75,7 +75,7 @@
                                 <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="user-menu d-flex">
                                         <div class="user-name text-end me-3">
-                                            <h6 class="mb-0 text-gray-600">John Ducky</h6>
+                                            <h6 class="mb-0 text-gray-600">{{ auth()->user()->name }}</h6>
                                             <p class="mb-0 text-sm text-gray-600">Administrator</p>
                                         </div>
                                         <div class="user-img d-flex align-items-center">
@@ -87,7 +87,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                     <li>
-                                        <h6 class="dropdown-header">Hello, John!</h6>
+                                        <h6 class="dropdown-header">Bonjour, {{ auth()->user()->name }}!</h6>
                                     </li>
                                     <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-person me-2"></i> My
                                             Profile</a></li>
@@ -126,20 +126,7 @@
                             </div>
                         </div>
                     </div>
-                    <section class="section">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Example Content</h4>
-                            </div>
-                            <div class="card-body">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur quas omnis
-                                laudantium tempore
-                                exercitationem, expedita aspernatur sed officia asperiores unde tempora maxime odio
-                                reprehenderit
-                                distinctio incidunt! Vel aspernatur dicta consequatur!
-                            </div>
-                        </div>
-                    </section>
+                    @yield('content')
                 </div>
 
                 <footer>
@@ -158,7 +145,7 @@
     </div>
     <script src="{{ asset('mazer/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('mazer/assets/js/bootstrap.bundle.min.js') }}"></script>
-
+    @yield('scripts')
     <script src="{{ asset('mazer/assets/js/main.js') }}"></script>
 </body>
 
