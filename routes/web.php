@@ -20,6 +20,6 @@ Route::get('/', function () {
 });
 Route::get('/test', fn()=> view('admin.dashboard'));
 Route::get('/login', fn()=>view('auth.login'));
-Route::post('/login', [AuthController::class, 'index'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');

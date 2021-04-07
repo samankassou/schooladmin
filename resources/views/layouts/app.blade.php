@@ -88,8 +88,11 @@
                                             Settings</a></li>
                                         <hr class="dropdown-divider">
                                     </li>
-                                    <li><a class="dropdown-item" href="#"><i
+                                    <li><a onclick="event.preventDefault();document.getElementById('logoutForm').submit();" class="dropdown-item" href="#"><i
                                                 class="icon-mid bi bi-box-arrow-left me-2"></i> Logout</a></li>
+                                    <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none">
+                                        @csrf
+                                    </form>
                                 </ul>
                             </div>
                         </div>
