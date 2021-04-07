@@ -5,6 +5,12 @@
 
 @section('content')
 <section class="section">
+    @if (session('message'))
+        <div class="alert alert-{{ session('alert') }} alert-dismissible show fade">
+            {{ session('message') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h4 class="card-title">Liste des utilisateurs</h4>
@@ -42,12 +48,16 @@
 
         let table = new simpleDatatables.DataTable("#users-datatable", {
             data: {
-            headings: ['#', 'Noms', 'Email', 'Options'],
+            headings: ['#', 'Noms', 'Email', 'Statut', 'Options'],
             data: data.map(user => {
                 return [
                     user.id,
                     user.name,
                     user.email,
+                    `<div class="form-check form-switch">
+                        <input class="form-check-input form-check-success" type="checkbox" id="flexSwitchCheckChecked${user.id}" checked="">
+                        <label class="form-check-label" for="flexSwitchCheckChecked${user.id}"></label>
+                    </div>`,
                     `<a href="#" class="btn btn-sm btn-primary">
                         <i class="bi bi-eye"></i>
                     </a>
