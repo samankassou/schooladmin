@@ -23,10 +23,45 @@
         </div>
     </div>
 </section>
+<div class="modal-danger me-1 mb-1 d-inline-block">
+    <!--Danger theme Modal -->
+    <div class="modal fade text-left" id="deleUserModal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <form id="deleteUserForm" method="POST" action="" class="modal-content">
+                @csrf
+                @method('DELETE')
+                <div class="modal-header bg-danger">
+                    <h5 class="modal-title white" id="myModalLabel120">
+                        Supprimer un utilisateur
+                    </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <i data-feather="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Voulez-vous vraiment le supprimer?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                        <i class="bx bx-x d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Annuler</span>
+                    </button>
+                    <button id="delete-btn" type="button" class="btn btn-danger ml-1" data-bs-dismiss="modal">
+                        <i class="bx bx-check d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">supprimer</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 @section('scripts')
 <script src="{{ asset('mazer/assets/vendors/simple-datatables/simple-datatables.js') }}"></script>
 <script>
+    deleteBtn = document.getElementById('delete-btn');
+    deleteBtn.addEventListener('click', deleteUser);
+
     window.onload = function ()
     {
         initDataTable();
@@ -37,8 +72,8 @@
         fetch('/users', {
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
-                        }
+                'Content-Type': 'application/json',
+            }
         })
         .then(response => response.json())
         .then(data => {
@@ -55,25 +90,43 @@
                     user.name,
                     user.email,
                     `<div class="form-check form-switch">
-                        <input class="form-check-input form-check-success" type="checkbox" id="flexSwitchCheckChecked${user.id}" checked="">
+                        <input class="form-check-input form-check-success" type="checkbox" id="flexSwitchCheckChecked${user.id}" ${user.status == 1?'checked':''}>
                         <label class="form-check-label" for="flexSwitchCheckChecked${user.id}"></label>
                     </div>`,
-                    `<a href="#" class="btn btn-sm btn-primary">
+                    `<a href="/users/${user.id}" class="btn btn-sm btn-primary">
                         <i class="bi bi-eye"></i>
                     </a>
-                    <a href="#" class="btn btn-sm btn-warning">
+                    <a href="/users/${user.id}/edit" class="btn btn-sm btn-warning">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <a href="#" class="btn btn-sm btn-danger">
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleUserModal" onclick="deleteUser(${user.id})">
                         <i class="bi bi-trash"></i>
-                    </a>`
+                    </button>`
                 ];
             })
             },
         })
         })
     }
+
+    function deleteUser(id)
+    {
+        
+        deleteBtn = document.getElementById('delete-btn');
+        deleteUserForm = document.getElementById('deleteUserForm');
+
+        deleteBtn.addEventListener('click', function(){
+            deleteUserForm.getAttributeNode('action').value = `/users/${id}`;
+            deleteUserForm.submit();
+        });
+        
+        
+    }
   
   
 </script>
 @endsection
+
+<button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#default">
+    Launch Modal
+</button>

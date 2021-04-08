@@ -18,7 +18,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if($request->wantsJson()){
-            return User::get(['id', 'name', 'email']);
+            return User::get(['id', 'name', 'status', 'email']);
         }
         return view('admin.users.index');
     }
@@ -68,7 +68,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return view('admin.users.edit', compact('user'));
     }
 
     /**
@@ -91,6 +91,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return redirect()->route('users.index')->with([
+            'alert' => 'success',
+            'message' => 'Utilisateur supprimé'
+        ]);
     }
 }
