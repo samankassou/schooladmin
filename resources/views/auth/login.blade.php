@@ -16,7 +16,7 @@
                     <div class="form-control-icon">
                         <i class="bi bi-envelope"></i>
                     </div>
-                    @error('password')
+                    @error('email')
                         <div class="invalid-feedback">
                             <i class="bx bx-radio-circle"></i>
                             {{ $message }}

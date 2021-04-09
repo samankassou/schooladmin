@@ -90,7 +90,7 @@
                     user.name,
                     user.email,
                     `<div class="form-check form-switch" onclick="toggleUserStatus(${user.id})">
-                        <input class="form-check-input form-check-success" type="checkbox" id="flexSwitchCheckChecked${user.id}" ${user.status == 1?'checked':''}>
+                        <input class="form-check-input form-check-success" style="cursor: pointer" type="checkbox" id="flexSwitchCheckChecked${user.id}" ${user.status == 1?'checked':''}>
                         <label class="form-check-label" for="flexSwitchCheckChecked${user.id}"></label>
                     </div>`,
                     `<a href="/admin/users/${user.id}" class="btn btn-sm btn-primary">
@@ -127,7 +127,7 @@
     {
         csrf_token = document.querySelector("meta[name='csrf-token']").getAttributeNode('content').value;
         
-        fetch('admin.users/toggleStatus/'+id, {
+        fetch('users/toggleStatus/'+id, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
