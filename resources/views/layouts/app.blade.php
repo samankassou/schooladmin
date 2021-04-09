@@ -41,13 +41,19 @@
                             </a>
                         </li>
 
+                        <li class="sidebar-item  {{ request()->routeIs('admin.students.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.students.index') }}" class='sidebar-link'>
+                                <i class="bi bi-people-fill"></i>
+                                <span>Elèves</span>
+                            </a>
+                        </li>
+
                         <li class="sidebar-item  {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.users.index') }}" class='sidebar-link'>
                                 <i class="bi bi-people-fill"></i>
                                 <span>Utilisateurs</span>
                             </a>
                         </li>
-
                     </ul>
                 </div>
                 <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
@@ -90,9 +96,9 @@
                                         <h6 class="dropdown-header">Bonjour, {{ auth()->user()->name }}!</h6>
                                     </li>
                                     <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-person me-2"></i> My
-                                            Profile</a></li>
+                                            Profil</a></li>
                                     <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-gear me-2"></i>
-                                            Settings</a></li>
+                                            Paramètres</a></li>
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li><a onclick="event.preventDefault();document.getElementById('logoutForm').submit();" class="dropdown-item" href="#"><i
