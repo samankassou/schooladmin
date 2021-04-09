@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
@@ -42,8 +43,13 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $password = bcrypt(Str::random(8));
-        User::create($request->validated() + ['password' => $password]);
-        return redirect()->route('users.index')->with([
+        
+        $user = User::create($request->validated() + ['password' => $password]);
+        if($request->hasFile('avatar')){
+            $user->avatar = $request->avatar->store('users/profiles', 'public');
+            $user->save();
+        }
+        return redirect()->route('admin.users.index')->with([
             'alert' => 'success',
             'message' => 'Utilisateur enregistré'
         ]);
@@ -89,9 +95,13 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        $user->update($request->validated());
+        return redirect()->route('admin.users.index')->with([
+            'alert' => 'success',
+            'message' => 'Utilisateur modifié'
+        ]);
     }
 
     /**
@@ -103,7 +113,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('users.index')->with([
+        return redirect()->route('admin.users.index')->with([
             'alert' => 'success',
             'message' => 'Utilisateur supprimé'
         ]);

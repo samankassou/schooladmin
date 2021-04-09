@@ -14,7 +14,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h4 class="card-title">Liste des utilisateurs</h4>
-            <a href="{{ route('users.create') }}" class="btn btn-sm btn-success"><i class="bi bi-person-plus"></i> Ajouter</a>
+            <a href="{{ route('admin.users.create') }}" class="btn btn-sm btn-success"><i class="bi bi-person-plus"></i> Ajouter</a>
         </div>
         <div class="card-body">
             <table class="table table-striped" id="users-datatable">
@@ -69,7 +69,7 @@
 
     function initDataTable()
     {
-        fetch('/users', {
+        fetch('/admin/users', {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -93,10 +93,10 @@
                         <input class="form-check-input form-check-success" type="checkbox" id="flexSwitchCheckChecked${user.id}" ${user.status == 1?'checked':''}>
                         <label class="form-check-label" for="flexSwitchCheckChecked${user.id}"></label>
                     </div>`,
-                    `<a href="/users/${user.id}" class="btn btn-sm btn-primary">
+                    `<a href="/admin/users/${user.id}" class="btn btn-sm btn-primary">
                         <i class="bi bi-eye"></i>
                     </a>
-                    <a href="/users/${user.id}/edit" class="btn btn-sm btn-warning">
+                    <a href="/admin/users/${user.id}/edit" class="btn btn-sm btn-warning">
                         <i class="bi bi-pencil"></i>
                     </a>
                     <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleUserModal" onclick="deleteUser(${user.id})">
@@ -116,7 +116,7 @@
         deleteUserForm = document.getElementById('deleteUserForm');
 
         deleteBtn.addEventListener('click', function(){
-            deleteUserForm.getAttributeNode('action').value = `/users/${id}`;
+            deleteUserForm.getAttributeNode('action').value = `/admin/users/${id}`;
             deleteUserForm.submit();
         });
         
@@ -127,7 +127,7 @@
     {
         csrf_token = document.querySelector("meta[name='csrf-token']").getAttributeNode('content').value;
         
-        fetch('users/toggleStatus/'+id, {
+        fetch('admin.users/toggleStatus/'+id, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

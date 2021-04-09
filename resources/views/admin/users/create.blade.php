@@ -7,7 +7,7 @@
             <h4 class="card-title">Ajout d'un nouvel utilisateur</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('users.store') }}" method="POST">
+            <form action="{{ route('admin.users.store') }}" method="POST">
                 @csrf
                 <div class="row justify-content-center">
                     <div class="col-md-6">
@@ -31,9 +31,15 @@
                                 </div>
                             @enderror
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <button type="submit" class="btn btn-success">Enregistrer</button>
-                            <button type="reset" class="btn btn-danger">Effacer</button>
+                        <div class="form-group">
+                            <label for="avatar" class="form-label">Photo</label>
+                            <input name="avatar" class="form-control form-control-sm" id="avatar" type="file">
+                        </div>
+                        <div class="form-group">
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-success">Enregistrer</button>
+                                <button type="reset" class="btn btn-danger">Effacer</button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -20,7 +20,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::group([
-    'middleware' => 'auth'
+    'middleware' => 'auth',
+    'as' => 'admin.',
+    'prefix' => 'admin'
 ], function(){
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
