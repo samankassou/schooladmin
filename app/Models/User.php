@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -21,8 +22,7 @@ class User extends Authenticatable implements HasMedia
     protected $fillable = [
         'name',
         'email',
-        'avatar',
-        'status',
+        'status', 
         'password',
     ];
 
@@ -44,4 +44,12 @@ class User extends Authenticatable implements HasMedia
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(368)
+            ->height(232)
+            ->sharpen(10);
+    }
 }
