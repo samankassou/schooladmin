@@ -84,9 +84,9 @@
         let table = new simpleDatatables.DataTable("#users-datatable", {
             data: {
             headings: ['#', 'Noms', 'Email', 'Statut', 'Options'],
-            data: data.map(user => {
+            data: data.map((user, index) => {
                 return [
-                    user.id,
+                    index + 1,
                     user.name,
                     user.email,
                     `<div class="form-check form-switch" onclick="toggleUserStatus(${user.id})">
