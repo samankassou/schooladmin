@@ -7,7 +7,7 @@
             <h4 class="card-title">Ajout d'un nouvel utilisateur</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('admin.users.store') }}" method="POST">
+            <form action="{{ route('admin.users.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row justify-content-center">
                     <div class="col-md-6">
@@ -31,9 +31,15 @@
                                 </div>
                             @enderror
                         </div>
-                        <div class="form-group">
+                        <div class="form-group @error('avatar') is-invalid @enderror">
                             <label for="avatar" class="form-label">Photo</label>
                             <input name="avatar" class="form-control form-control-sm" id="avatar" type="file">
+                            @error('avatar')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <div class="d-flex justify-content-between">
