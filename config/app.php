@@ -167,6 +167,7 @@ return [
          */
 
         Yajra\DataTables\DataTablesServiceProvider::class,
+        App\Providers\FortifyServiceProvider::class,
 
         /*
          * Application Service Providers...
