@@ -89,7 +89,7 @@
                     user.id,
                     user.name,
                     user.email,
-                    `<div class="form-check form-switch">
+                    `<div class="form-check form-switch" onclick="toggleUserStatus(${user.id})">
                         <input class="form-check-input form-check-success" type="checkbox" id="flexSwitchCheckChecked${user.id}" ${user.status == 1?'checked':''}>
                         <label class="form-check-label" for="flexSwitchCheckChecked${user.id}"></label>
                     </div>`,
@@ -122,11 +122,24 @@
         
         
     }
+
+    function toggleUserStatus(id)
+    {
+        csrf_token = document.querySelector("meta[name='csrf-token']").getAttributeNode('content').value;
+        
+        fetch('users/toggleStatus/'+id, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({'id': id, '_token': csrf_token})
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.log(error))
+    }
   
   
 </script>
 @endsection
-
-<button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#default">
-    Launch Modal
-</button>

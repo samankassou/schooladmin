@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/test', fn()=> view('admin.dashboard'));
 Route::get('/login', fn()=>view('auth.login'));
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::group([
@@ -27,5 +26,6 @@ Route::group([
 ], function(){
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
+    Route::post('users/toggleStatus/{user}', [UserController::class, 'toggleStatus']);
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
