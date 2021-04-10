@@ -46,7 +46,7 @@ class UserController extends Controller
         
         $user = User::create($request->validated() + ['password' => $password]);
         if($request->hasFile('avatar')){
-            $user->addMediaFromRequest('avatar')->toMediaCollection('avatars');
+            $user->addMediaFromRequest('avatar')->toMediaCollection('avatars', 'public');
         }
         return redirect()->route('admin.users.index')->with([
             'alert' => 'success',

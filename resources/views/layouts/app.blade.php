@@ -86,7 +86,11 @@
                                         </div>
                                         <div class="user-img d-flex align-items-center">
                                             <div class="avatar avatar-md">
-                                                <img src="{{ asset('mazer/assets/images/faces/1.jpg') }}">
+                                                @if (empty(auth()->user()->avatar))
+                                                <img src="{{ asset('images/default-user.jpg') }}">
+                                                @else
+                                                <img src="{{ auth()->user()->avatar->getUrl() }}">
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

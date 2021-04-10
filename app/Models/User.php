@@ -47,9 +47,14 @@ class User extends Authenticatable implements HasMedia
 
     public function registerMediaConversions(Media $media = null): void
     {
-        $this->addMediaConversion('thumb')
-            ->width(368)
-            ->height(232)
+        $this->addMediaConversion('avatar-thumb')
+            ->width(120)
+            ->height(120)
             ->sharpen(10);
+    }
+
+    public function getAvatarAttribute()
+    {
+        return $this->getFirstMedia('avatars');
     }
 }
