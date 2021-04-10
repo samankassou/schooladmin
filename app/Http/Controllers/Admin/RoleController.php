@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
@@ -12,9 +14,17 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        //Role::create(['name' => 'Proviseur']);
+        //Permission::create(['name' => 'edit student']);
+        // $role = Role::findByName('Proviseur');
+        // $role->givePermissionTo('edit student');
+
+        if($request->wantsJson()){
+            return Role::with('permissions')->get();
+        }
+        return view('admin.roles.index');
     }
 
     /**
