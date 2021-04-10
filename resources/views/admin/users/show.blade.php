@@ -10,7 +10,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <div class="card-content">
-                        <img src="{{ asset('mazer/assets/images/samples/motorcycle.jpg') }}" class="card-img-top img-fluid" alt="singleminded">
+                        <img src="{{ asset(empty($user->avatar)? 'images/default-user.jpg' : $user->avatar->getUrl()) }}" class="card-img-top img-fluid" alt="singleminded">
                         <div class="card-body">
                             <h5 class="card-title">Noms: {{ $user->name }}</h5>
                             <h5 class="card-title">Email: {{ $user->email }}</h5>
