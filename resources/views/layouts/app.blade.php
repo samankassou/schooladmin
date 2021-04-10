@@ -54,6 +54,13 @@
                                 <span>Utilisateurs</span>
                             </a>
                         </li>
+
+                        <li class="sidebar-item  {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.roles.index') }}" class='sidebar-link'>
+                                <i class="bi bi-people-fill"></i>
+                                <span>Roles et permissions</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
