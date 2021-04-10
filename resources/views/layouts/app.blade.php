@@ -89,7 +89,7 @@
                                                 @if (empty(auth()->user()->avatar))
                                                 <img src="{{ asset('images/default-user.jpg') }}">
                                                 @else
-                                                <img src="{{ auth()->user()->avatar->getUrl() }}">
+                                                <img src="{{ auth()->user()->avatar->getUrl('avatar-thumb') }}">
                                                 @endif
                                             </div>
                                         </div>

@@ -77,16 +77,19 @@
         })
         .then(response => response.json())
         .then(data => {
-        if (!data.length) {
+        if (!data.data.length) {
             return
         }
 
         let table = new simpleDatatables.DataTable("#users-datatable", {
             data: {
-            headings: ['#', 'Noms', 'Email', 'Statut', 'Options'],
-            data: data.map((user, index) => {
+            headings: ['#','Photo', 'Noms', 'Email', 'Statut', 'Options'],
+            data: data.data.map((user, index) => {
                 return [
                     index + 1,
+                    `<div class="avatar avatar-lg me-3">
+                        <img src="${user.avatar}" alt="avatar">
+                    </div>`,
                     user.name,
                     user.email,
                     `<div class="form-check form-switch" onclick="toggleUserStatus(${user.id})">

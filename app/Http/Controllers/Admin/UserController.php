@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
@@ -18,8 +19,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        //dd(UserResource::collection(User::all()));
         if($request->wantsJson()){
-            return User::get(['id', 'name', 'status', 'email']);
+            return UserResource::collection(User::all());
         }
         return view('admin.users.index');
     }
