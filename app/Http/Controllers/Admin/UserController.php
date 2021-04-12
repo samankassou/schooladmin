@@ -19,7 +19,6 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        //dd(UserResource::collection(User::all()));
         if($request->wantsJson()){
             return UserResource::collection(User::all());
         }

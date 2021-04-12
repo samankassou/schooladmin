@@ -9,7 +9,6 @@ class Student extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
     protected $fillable = [
         'firstname',
         'lastname',
@@ -22,6 +21,6 @@ class Student extends Model
 
     public function classrooms()
     {
-        return $this->belongsToMany(Classroom::class, 'school_path', 'classroom_id', 'student_id');
+        return $this->belongsToMany(Classroom::class, 'school_path', 'student_id', 'classroom_id');
     }
 }
