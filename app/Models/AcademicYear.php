@@ -12,4 +12,18 @@ class AcademicYear extends Model
     public $timestamps = false;
 
     protected $dates = ['start_date', 'end_date'];
+
+    /**
+     * Scope a query to return only current academic year.
+     */
+    public static function Current()
+    {
+        $currentYear = self::firstWhere([
+            ['start_date', '<=', now()->addYear()],
+            ['end_date', '>=', now()->addYear()]
+        ]);
+        $defaultYear = self::firstWhere('name', '2020/2021');
+        
+        return $currentYear ?? $defaultYear;
+    }
 }
