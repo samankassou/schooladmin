@@ -16,7 +16,7 @@ class AcademicYear extends Model
     /**
      * Scope a query to return only current academic year.
      */
-    public static function Current()
+    public static function current()
     {
         $currentYear = self::firstWhere([
             ['start_date', '<=', now()->addYear()],

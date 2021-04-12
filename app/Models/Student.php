@@ -26,7 +26,6 @@ class Student extends Model
 
     public function getCurrentClassroomAttribute()
     {
-        $currentYear = AcademicYear::first();
-        return $this->classrooms()->firstWhere('academic_year_id', $currentYear->id);
+        return $this->classrooms()->firstWhere('academic_year_id', AcademicYear::current()->id);
     }
 }

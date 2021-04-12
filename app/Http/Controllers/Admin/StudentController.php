@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\StudentResource;
 
 class StudentController extends Controller
 {
@@ -16,6 +17,15 @@ class StudentController extends Controller
     public function index()
     {
         return view('admin.students.index');
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function list()
+    {
+        return StudentResource::collection(Student::all());
     }
 
     /**
