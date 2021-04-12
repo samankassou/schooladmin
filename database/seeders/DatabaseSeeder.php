@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Database\Seeders\ClassroomSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,7 +18,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AcademicYearSeeder::class,
             CycleSeeder::class,
-            LevelSeeder::class
+            LevelSeeder::class,
+            ClassroomSeeder::class
         ]);
     }
 }

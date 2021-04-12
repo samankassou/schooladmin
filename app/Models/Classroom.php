@@ -9,6 +9,8 @@ class Classroom extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     public function academicYear()
     {
         return $this->belongsTo(AcademicYear::class);
