@@ -18,4 +18,9 @@ class Classroom extends Model
     {
         return $this->belongsTo(Level::class);
     }
+
+    public function students()
+    {
+        return $this->belongsToMany(Classroom::class, 'school_path', 'student_id', 'classroom_id');
+    }
 }
