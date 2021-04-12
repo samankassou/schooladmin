@@ -9,6 +9,8 @@ class Level extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     public function cycle()
     {
         return $this->belongsTo(Cycle::class);
