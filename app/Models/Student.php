@@ -23,4 +23,10 @@ class Student extends Model
     {
         return $this->belongsToMany(Classroom::class, 'school_path', 'student_id', 'classroom_id');
     }
+
+    public function getCurrentClassroomAttribute()
+    {
+        $currentYear = AcademicYear::first();
+        return $this->classrooms()->firstWhere('academic_year_id', $currentYear->id);
+    }
 }
