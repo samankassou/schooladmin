@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            AcademicYearSeeder::class
+            AcademicYearSeeder::class,
+            CycleSeeder::class
         ]);
     }
 }
