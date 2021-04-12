@@ -15,6 +15,8 @@ class CreateSchoolPathTable extends Migration
     {
         Schema::create('school_path', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('classroom_id')->constrained();
+            $table->foreignId('student_id')->constrained();
             $table->timestamps();
         });
     }
