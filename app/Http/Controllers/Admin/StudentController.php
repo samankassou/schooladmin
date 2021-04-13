@@ -21,8 +21,10 @@ class StudentController extends Controller
             return Datatables::of(Student::all())
                 ->addIndexColumn()
                 ->addColumn('action', function(Student $student){
-                    $actionBtn = '<a href="/admin/students/'.$student->id.'/edit" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
-                    return $actionBtn;
+                    $actionBtns = "<a href='/admin/students/$student->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
+                    $actionBtns .= "<a href='/admin/students/$student->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
+                    $actionBtns .= "<a href='/admin/students/$student->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
+                    return $actionBtns;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -57,7 +59,10 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'firstname' => 'required',
+            'lastname' => 'required',
+        ]);
     }
 
     /**
