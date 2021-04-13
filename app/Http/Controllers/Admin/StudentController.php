@@ -6,6 +6,7 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
+use Yajra\DataTables\DataTables;
 
 class StudentController extends Controller
 {
@@ -14,9 +15,19 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.students.index');
+        if ($request->ajax()) {
+            return Datatables::of(Student::all())
+                ->addIndexColumn()
+                ->addColumn('action', function(Student $student){
+                    $actionBtn = '<a href="/admin/students/'.$student->id.'/edit" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        return view('admin.students.index2');
     }
     /**
      * Display a listing of the resource.

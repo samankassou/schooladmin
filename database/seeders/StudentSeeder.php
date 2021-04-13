@@ -15,7 +15,7 @@ class StudentSeeder extends Seeder
      */
     public function run()
     {
-        Student::factory()->count(50)->create()->each(function($student){
+        Student::factory()->count(2000)->create()->each(function($student){
             $student->classrooms()->attach(Classroom::all()->random()->id);
         });
     }

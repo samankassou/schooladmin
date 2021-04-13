@@ -12,6 +12,8 @@ class Student extends Model
 
     protected $dates = ['dob'];
 
+    protected $appends = ['current_classroom'];
+
     protected $fillable = [
         'firstname',
         'lastname',
