@@ -11,7 +11,7 @@
             <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#create-user-modal"><i class="bi bi-person-plus"></i> Ajouter</button>
         </div>
         <div class="card-body">
-            <table class="table table-striped" id="students-datatable">
+            <table class="table table-striped" id="students-datatable" style="width: 100%">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -42,10 +42,22 @@
                     <label>Nom(s): </label>
                     <div class="form-group">
                         <input type="text" placeholder="Nom(s) de l'élève" class="form-control" name="firstname">
+                        <div class="invalid-feedback" id="firstname-error">
+                            
+                        </div>
                     </div>
+                    
                     <label>Prénom(s): </label>
                     <div class="form-group">
                         <input type="text" placeholder="Prénom(s) de l'élève" class="form-control" name="lastname">
+                        <div class="invalid-feedback" id="lastname-error">
+                            
+                        </div>
+                    </div>
+                    
+                    <label>Lieu de naissance: </label>
+                    <div class="form-group">
+                        <input type="text" placeholder="Lieu de naissance" class="form-control" name="place_of_birth">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -115,7 +127,12 @@
                 console.log(response);
             },
             error: function(response){
-                console.log(response);
+                var errors = response.responseJSON.errors;
+                for (const error in errors) {
+                    $('#'+error+'-error').html(errors[error][0]).show();
+                    //console.log(error, errors[error][0]);
+
+                }
             }
         });
     });
