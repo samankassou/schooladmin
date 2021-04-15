@@ -83,6 +83,18 @@
                         </div>
                     </fieldset>
 
+                    <label>Classe: </label>
+                    <fieldset class="form-group">
+                        <select class="form-select" id="gender" name="classroom">
+                            @foreach ($classrooms as $classroom)
+                                <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback" id="classroom-error">
+                            
+                        </div>
+                    </fieldset>
+
                     <label>Nom du père: </label>
                     <div class="form-group">
                         <input type="text" class="form-control" name="father_name">

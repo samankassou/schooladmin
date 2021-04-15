@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Student;
+use App\Models\Classroom;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
@@ -30,7 +32,8 @@ class StudentController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('admin.students.index2');
+        $classrooms = Classroom::all();
+        return view('admin.students.index2', compact('classrooms'));
     }
     /**
      * Display a listing of the resource.
@@ -60,7 +63,8 @@ class StudentController extends Controller
      */
     public function store(StoreStudentRequest $request)
     {
-        Student::create($request->validated());
+        $student = Student::create(Arr::except($request->validated(), ['classroom']));
+        $student->classrooms()->attach([$request->classroom]);
         return response()->json(['message' => 'Student successfully created'], 201);
     }
 
