@@ -10,7 +10,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h4 class="card-title">Liste des élèves</h4>
-            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#create-user-modal"><i class="bi bi-person-plus"></i> Ajouter</button>
+            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#create-student-modal"><i class="bi bi-person-plus"></i> Ajouter</button>
         </div>
         <div class="card-body">
             <table class="table table-striped" id="students-datatable" style="width: 100%">
@@ -30,7 +30,7 @@
         </div>
     </div>
 </section>
-<div class="modal fade text-left" id="create-user-modal" tabindex="-1" aria-labelledby="myModalLabel33" aria-hidden="true" style="display: none;">
+<div class="modal fade text-left" id="create-student-modal" tabindex="-1" aria-labelledby="myModalLabel33" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -40,7 +40,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="#" id="create-user-form">
+                <form action="#" id="create-student-form">
                     <label for="firstname">Nom(s): </label>
                     <div class="form-group">
                         <input type="text" id="firstname" placeholder="Nom(s) de l'élève" class="form-control" name="firstname">
@@ -117,7 +117,7 @@
                     <i class="bx bx-x d-block d-sm-none"></i>
                     <span class="d-none d-sm-block">Annuler</span>
                 </button>
-                <button id="save-user-btn" type="button" class="btn btn-primary ml-1">
+                <button id="save-student-btn" type="button" class="btn btn-primary ml-1">
                     <i class="bx bx-check d-block d-sm-none"></i>
                     <span class="d-none d-sm-block">Enregistrer</span>
                 </button>
@@ -169,15 +169,16 @@
         ]
     });
 
-    $('#save-user-btn').click(function(e){
-        var data = $('#create-user-form').serialize();
+    $('#save-student-btn').click(function(e){
+        var data = $('#create-student-form').serialize();
         $.ajax({
             type: "POST",
             url: "{{ route('admin.students.store') }}",
             data: data,
             success: function(response){
-                $('#create-user-modal').modal().hide();
-                console.log(response);
+                reset_modal();
+                $('#create-student-modal').modal('hide');
+                table.ajax.reload(null, false);
                 Toastify({
                     text: "Inscription effectuée avec succès!",
                     duration: 3000,
@@ -199,7 +200,17 @@
     $('#firstname').focus(function(e){
         $('#firtsname-error').text('');
     });
+
+    $('#create-student-modal').on('hide.bs.modal', function(){
+        reset_modal();
+    });
     
   });
+
+  function reset_modal()
+  {
+    $('#create-student-form').trigger("reset");
+    $("[id$='-error']").html('');
+  }
 </script>
 @endsection
