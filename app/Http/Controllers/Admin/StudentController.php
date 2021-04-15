@@ -40,9 +40,15 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function list()
+    public function list(Request $request)
     {
-        return StudentResource::collection(Student::all());
+        $query = Student::query();
+        if($request->classroom_id)
+        {
+            $query->classrooms()->where('id', $request->classroom_id);
+        }
+
+        return StudentResource::collection($query->get());
     }
 
     /**

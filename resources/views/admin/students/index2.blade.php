@@ -172,7 +172,7 @@
     $('#save-student-btn').click(function(e){
         var data = $('#create-student-form').serialize();
         $.ajax({
-            type: "POST",
+            method: "POST",
             url: "{{ route('admin.students.store') }}",
             data: data,
             success: function(response){
