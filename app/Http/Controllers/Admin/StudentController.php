@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
-use Yajra\DataTables\DataTables;
+use App\Http\Requests\StoreStudentRequest;
 
 class StudentController extends Controller
 {
@@ -57,12 +58,10 @@ class StudentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreStudentRequest $request)
     {
-        $request->validate([
-            'firstname' => 'required',
-            'lastname' => 'required',
-        ]);
+        Student::create($request->validated());
+        return response()->json(['message' => 'Student successfully created'], 201);
     }
 
     /**

@@ -29,7 +29,7 @@
     </div>
 </section>
 <div class="modal fade text-left" id="create-user-modal" tabindex="-1" aria-labelledby="myModalLabel33" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel33">Ajouter un élève </h4>
@@ -37,11 +37,11 @@
                     <i data-feather="x"></i>
                 </button>
             </div>
-            <form action="#" id="create-user-form">
-                <div class="modal-body">
-                    <label>Nom(s): </label>
+            <div class="modal-body">
+                <form action="#" id="create-user-form">
+                    <label for="firstname">Nom(s): </label>
                     <div class="form-group">
-                        <input type="text" placeholder="Nom(s) de l'élève" class="form-control" name="firstname">
+                        <input type="text" id="firstname" placeholder="Nom(s) de l'élève" class="form-control" name="firstname">
                         <div class="invalid-feedback" id="firstname-error">
                             
                         </div>
@@ -54,23 +54,54 @@
                             
                         </div>
                     </div>
+
+                    <label>Date de naissance: </label>
+                    <div class="form-group">
+                        <input type="date" class="form-control" name="dob">
+                        <div class="invalid-feedback" id="dob-error">
+                            
+                        </div>
+                    </div>
                     
                     <label>Lieu de naissance: </label>
                     <div class="form-group">
                         <input type="text" placeholder="Lieu de naissance" class="form-control" name="place_of_birth">
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                        <i class="bx bx-x d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">Annuler</span>
-                    </button>
-                    <button id="save-user-btn" type="button" class="btn btn-primary ml-1">
-                        <i class="bx bx-check d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">Enregistrer</span>
-                    </button>
-                </div>
-            </form>
+                    <label>Sexe: </label>
+                    <fieldset class="form-group">
+                        <select class="form-select" id="gender" name="gender">
+                            <option value="M">M</option>
+                            <option value="F">F</option>
+                        </select>
+                    </fieldset>
+
+                    <label>Nom du père: </label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="father_name">
+                        <div class="invalid-feedback" id="father_name-error">
+                            
+                        </div>
+                    </div>
+
+                    <label>Nom de la mère: </label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="mother_name">
+                        <div class="invalid-feedback" id="mother_name-error">
+                            
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Annuler</span>
+                </button>
+                <button id="save-user-btn" type="button" class="btn btn-primary ml-1">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Enregistrer</span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -124,17 +155,20 @@
             url: "{{ route('admin.students.store') }}",
             data: data,
             success: function(response){
+                $('#create-user-modal').modal().hide();
                 console.log(response);
             },
             error: function(response){
                 var errors = response.responseJSON.errors;
                 for (const error in errors) {
                     $('#'+error+'-error').html(errors[error][0]).show();
-                    //console.log(error, errors[error][0]);
-
                 }
             }
         });
+    });
+
+    $('#firstname').focus(function(e){
+        $('#firtsname-error').text('');
     });
     
   });
