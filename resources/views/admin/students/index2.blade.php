@@ -1,5 +1,7 @@
 @extends('layouts.app', ['title' => 'Elèves'])
 @section('styles')
+<link rel="stylesheet" href="assets/vendors/toastify/toastify.css">
+<link rel="stylesheet" href="{{ asset('mazer/assets/vendors/toastify/toastify.css') }}">
 <link href="{{ asset('vendor/datatables/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet">
 @endsection
 
@@ -66,6 +68,9 @@
                     <label>Lieu de naissance: </label>
                     <div class="form-group">
                         <input type="text" placeholder="Lieu de naissance" class="form-control" name="place_of_birth">
+                        <div class="invalid-feedback" id="place_of_birth-error">
+                            
+                        </div>
                     </div>
                     <label>Sexe: </label>
                     <fieldset class="form-group">
@@ -73,6 +78,9 @@
                             <option value="M">M</option>
                             <option value="F">F</option>
                         </select>
+                        <div class="invalid-feedback" id="gender-error">
+                            
+                        </div>
                     </fieldset>
 
                     <label>Nom du père: </label>
@@ -110,6 +118,7 @@
 <script src="{{ asset('vendor/datatables/js/jquery-3.5.1.js') }}"></script>
 <script src="{{ asset('vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('vendor/datatables/js/dataTables.bootstrap5.min.js') }}"></script>
+<script src="{{ asset('mazer/assets/vendors/toastify/toastify.js') }}"></script>
 <script>
     $(function () {
         $.ajaxSetup({
@@ -157,6 +166,14 @@
             success: function(response){
                 $('#create-user-modal').modal().hide();
                 console.log(response);
+                Toastify({
+                    text: "Inscription effectuée avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
             },
             error: function(response){
                 var errors = response.responseJSON.errors;
