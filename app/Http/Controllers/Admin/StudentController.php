@@ -10,6 +10,7 @@ use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
 use App\Http\Requests\StoreStudentRequest;
+use App\Http\Requests\UpdateStudentRequest;
 
 class StudentController extends Controller
 {
@@ -103,9 +104,12 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Student $student)
+    public function update(UpdateStudentRequest $request, Student $student)
     {
-        //
+        // $student->fill(Arr::except($request->validated(), ['classroom']));
+        // $student->save();
+        // $student->classrooms()->sync([$request->classroom]);
+        return response()->json(['message' => 'Student updated successfully!']);
     }
 
     /**

@@ -157,7 +157,7 @@
 
                     <label>Date de naissance: </label>
                     <div class="form-group">
-                        <input type="date" id="edit-dob" class="form-control" name="edit-dob">
+                        <input type="date" id="edit-dob" class="form-control" name="dob">
                         <div class="invalid-feedback" id="edit-dob-error">
                             
                         </div>
@@ -165,7 +165,7 @@
                     
                     <label>Lieu de naissance: </label>
                     <div class="form-group">
-                        <input type="text" id="edit-place_of_birth" placeholder="Lieu de naissance" class="form-control" name="edit-place_of_birth">
+                        <input type="text" id="edit-place_of_birth" placeholder="Lieu de naissance" class="form-control" name="place_of_birth">
                         <div class="invalid-feedback" id="edit-place_of_birth-error">
                             
                         </div>
@@ -342,6 +342,7 @@
   function reset_modal()
   {
     $('#create-student-form').trigger("reset");
+    $('#edit-student-form').trigger("reset");
     $("[id$='-error']").html('');
   }
 
@@ -386,33 +387,37 @@
                 $('#edit-place_of_birth').val(student.place_of_birth);
                 $('#edit-mother_name').val(student.mother_name);
                 $('#edit-father_name').val(student.father_name);
+
+                $('#update-student-btn').click(function(){
+                    var data = $('#edit-student-form').serialize();
+                    console.log(data);
+                    $.ajax({
+                        method: "POST",
+                        url: "/admin/students/"+id,
+                        data: {_method: "PATCH", data: data},
+                        success: function(response){
+                            $('#edit-student-modal').modal('hide');
+                            table.ajax.reload(null, false);
+                            Toastify({
+                                text: "Modification effectuée avec succès!",
+                                duration: 3000,
+                                close:true,
+                                gravity:"top",
+                                position: "right",
+                                backgroundColor: "#4fbe87",
+                            }).showToast();
+                        },
+                        error: function(response){
+                            console.log(response);
+                        }
+                    });
+                });
             },
             error: function(response){
                 console.log(response);
             }
       });
-    // $('#update-btn').click(function(){
-    //     $.ajax({
-    //         method: "POST",
-    //         url: "/admin/students/"+id,
-    //         data: {_method: "DELETE"},
-    //         success: function(response){
-    //             $('#delete-student-modal').modal('hide');
-    //             table.ajax.reload(null, false);
-    //             Toastify({
-    //                 text: "Suppression effectuée avec succès!",
-    //                 duration: 3000,
-    //                 close:true,
-    //                 gravity:"top",
-    //                 position: "right",
-    //                 backgroundColor: "#4fbe87",
-    //             }).showToast();
-    //         },
-    //         error: function(response){
-    //             console.log(response);
-    //         }
-    //     });
-    // });
+    
   }
 </script>
 @endsection
