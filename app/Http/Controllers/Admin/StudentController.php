@@ -25,7 +25,7 @@ class StudentController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function(Student $student){
                     $actionBtns = "<a href='/admin/students/$student->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
-                    $actionBtns .= "<button class='btn btn-sm btn-warning' onclick='edit_student(".$student->id.")'><i class='bi bi-pencil'></i></button>";
+                    $actionBtns .= "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-student-modal' onclick='edit_student(".$student->id.")'><i class='bi bi-pencil'></i></button>";
                     $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-student-modal' onclick='delete_student(".$student->id.")'><i class='bi bi-trash'></i></button>";
                     return $actionBtns;
                 })
@@ -93,7 +93,7 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        //
+        return response()->json(['student' => $student]);
     }
 
     /**
