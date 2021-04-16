@@ -25,8 +25,8 @@ class StudentController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function(Student $student){
                     $actionBtns = "<a href='/admin/students/$student->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
-                    $actionBtns .= "<a href='/admin/students/$student->id' class='btn btn-sm btn-warning'><i class='bi bi-pencil'></i></a>";
-                    $actionBtns .= "<a href='/admin/students/$student->id' class='btn btn-sm btn-danger'><i class='bi bi-trash'></i></a>";
+                    $actionBtns .= "<button class='btn btn-sm btn-warning' onclick='edit_student(".$student->id.")'><i class='bi bi-pencil'></i></button>";
+                    $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-student-modal' onclick='delete_student(".$student->id.")'><i class='bi bi-trash'></i></button>";
                     return $actionBtns;
                 })
                 ->rawColumns(['action'])
@@ -116,6 +116,8 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        //
+        $student->classrooms()->detach();
+        $student->delete();
+        return response()->json(['message' => 'Student deleted successfully!']);
     }
 }

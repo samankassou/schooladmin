@@ -85,7 +85,7 @@
 
                     <label>Classe: </label>
                     <fieldset class="form-group">
-                        <select class="form-select" id="gender" name="classroom">
+                        <select class="form-select" id="classroom" name="classroom">
                             @foreach ($classrooms as $classroom)
                                 <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
                             @endforeach
@@ -125,6 +125,40 @@
         </div>
     </div>
 </div>
+{{-- Delete student modal --}}
+<div class="modal-danger me-1 mb-1 d-inline-block">
+    <!--Danger theme Modal -->
+    <div class="modal fade text-left" id="delete-student-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <form id="delete-student-form" method="POST" action="" class="modal-content">
+                @csrf
+                @method('DELETE')
+                <div class="modal-header bg-danger">
+                    <h5 class="modal-title white" id="myModalLabel120">
+                        Supprimer un Elève
+                    </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <i data-feather="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Voulez-vous vraiment le supprimer?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                        <i class="bx bx-x d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Annuler</span>
+                    </button>
+                    <button id="delete-btn" type="button" class="btn btn-danger ml-1" data-bs-dismiss="modal">
+                        <i class="bx bx-check d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">supprimer</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{--! Delete student modal --}}
 @endsection
 @section('scripts')
 <script src="{{ asset('vendor/datatables/js/jquery-3.5.1.js') }}"></script>
@@ -132,13 +166,6 @@
 <script src="{{ asset('vendor/datatables/js/dataTables.bootstrap5.min.js') }}"></script>
 <script src="{{ asset('mazer/assets/vendors/toastify/toastify.js') }}"></script>
 <script>
-    $(function () {
-        $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    
     var table = $('#students-datatable').DataTable({
         language: {
             url: "{{ asset('vendor/datatables/lang/French.json') }}"
@@ -167,6 +194,12 @@
                 searchable: false
             },
         ]
+    });
+    $(function () {
+        $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
     });
 
     $('#save-student-btn').click(function(e){
@@ -211,6 +244,32 @@
   {
     $('#create-student-form').trigger("reset");
     $("[id$='-error']").html('');
+  }
+
+  function delete_student(id)
+  {
+    $('#delete-btn').click(function(){
+        $.ajax({
+            method: "POST",
+            url: "/admin/students/"+id,
+            data: {_method: "DELETE"},
+            success: function(response){
+                $('#delete-student-modal').modal('hide');
+                table.ajax.reload(null, false);
+                Toastify({
+                    text: "Suppression effectuée avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
+            },
+            error: function(response){
+                console.log(response);
+            }
+        });
+    });
   }
 </script>
 @endsection

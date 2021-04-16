@@ -98,7 +98,7 @@
                     <a href="/admin/students/${student.id}/edit" class="btn btn-sm btn-warning">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleStudentModal" onclick="deleteStudent(${student.id})">
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete-student-modal" onclick="deleteStudent(${student.id})">
                         <i class="bi bi-trash"></i>
                     </button>`
                 ];
