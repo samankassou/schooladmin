@@ -25,8 +25,8 @@ class StudentController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function(Student $student){
                     $actionBtns = "<a href='/admin/students/$student->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
-                    $actionBtns .= "<a href='/admin/students/$student->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
-                    $actionBtns .= "<a href='/admin/students/$student->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
+                    $actionBtns .= "<a href='/admin/students/$student->id' class='btn btn-sm btn-warning'><i class='bi bi-pencil'></i></a>";
+                    $actionBtns .= "<a href='/admin/students/$student->id' class='btn btn-sm btn-danger'><i class='bi bi-trash'></i></a>";
                     return $actionBtns;
                 })
                 ->rawColumns(['action'])
