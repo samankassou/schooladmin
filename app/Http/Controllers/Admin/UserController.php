@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
@@ -19,8 +20,17 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->wantsJson()){
-            return UserResource::collection(User::all());
+        if($request->ajax()){
+            return Datatables::of(User::get(['id', 'name', 'email', 'status']))
+            ->addIndexColumn()
+            ->addColumn('action', function(User $student){
+                $actionBtns = "<a href='/admin/students/$student->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
+                $actionBtns .= "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-student-modal' onclick='edit_student(".$student->id.")'><i class='bi bi-pencil'></i></button>";
+                $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-student-modal' onclick='delete_student(".$student->id.")'><i class='bi bi-trash'></i></button>";
+                return $actionBtns;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
         }
         return view('admin.users.index');
     }

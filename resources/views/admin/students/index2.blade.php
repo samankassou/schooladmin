@@ -1,6 +1,5 @@
 @extends('layouts.app', ['title' => 'Elèves'])
 @section('styles')
-<link rel="stylesheet" href="assets/vendors/toastify/toastify.css">
 <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/toastify/toastify.css') }}">
 <link href="{{ asset('vendor/datatables/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet">
 @endsection
