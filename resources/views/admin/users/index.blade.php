@@ -74,7 +74,17 @@
         },
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
+            {
+                data: 'avatar_url', 
+                name: 'avatar_url', 
+                orderable: false, 
+                searchable: false,
+                render: function(avatar_url){
+                    return `<div class="avatar avatar-lg">
+                                <img src="${avatar_url ?? '/images/default-user.jpg'}" alt="user_avatar">
+                            </div>`;
+                },
+            },
             {data: 'name', name: 'name'},
             {data: 'email', name: 'email'},
             {

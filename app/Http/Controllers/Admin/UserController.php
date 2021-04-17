@@ -20,13 +20,17 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $users = User::all(['id', 'name', 'email', 'status'])->each(function($user){
+            $user->avatar_url = !empty($user->avatar) ? $user->avatar->getUrl('avatar-thumb') : null;
+            unset($user->media);
+        });
         if($request->ajax()){
-            return Datatables::of(User::get(['id', 'name', 'email', 'status']))
+            return Datatables::of($users)
             ->addIndexColumn()
-            ->addColumn('action', function(User $student){
-                $actionBtns = "<a href='/admin/students/$student->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
-                $actionBtns .= "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-student-modal' onclick='edit_student(".$student->id.")'><i class='bi bi-pencil'></i></button>";
-                $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-student-modal' onclick='delete_student(".$student->id.")'><i class='bi bi-trash'></i></button>";
+            ->addColumn('action', function(User $user){
+                $actionBtns = "<a href='/admin/users/$user->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
+                $actionBtns .= "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-user-modal' onclick='edit_user(".$user->id.")'><i class='bi bi-pencil'></i></button>";
+                $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-user-modal' onclick='delete_user(".$user->id.")'><i class='bi bi-trash'></i></button>";
                 return $actionBtns;
             })
             ->rawColumns(['action'])
