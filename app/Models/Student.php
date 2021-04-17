@@ -12,7 +12,7 @@ class Student extends Model
 
     protected $dates = ['dob'];
 
-    protected $appends = ['current_classroom'];
+    protected $appends = ['current_classroom', 'formatted_dob'];
 
     protected $fillable = [
         'firstname',
@@ -37,5 +37,10 @@ class Student extends Model
     public function getDobAttribute($dob)
     {
         return Carbon::parse($dob)->format('d/m/Y');
+    }
+
+    public function getFormattedDobAttribute()
+    {
+        return Carbon::parse($this->attributes['dob'])->format('Y-m-d');
     }
 }

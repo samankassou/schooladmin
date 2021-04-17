@@ -106,9 +106,9 @@ class StudentController extends Controller
      */
     public function update(UpdateStudentRequest $request, Student $student)
     {
-        // $student->fill(Arr::except($request->validated(), ['classroom']));
-        // $student->save();
-        // $student->classrooms()->sync([$request->classroom]);
+        $student->update(Arr::except($request->validated() + ['father_name' => $request->father_name], ['classroom']));
+        $student->classrooms()->detach($student->current_classroom);
+        $student->classrooms()->attach($request->classroom);
         return response()->json(['message' => 'Student updated successfully!']);
     }
 

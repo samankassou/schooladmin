@@ -380,7 +380,7 @@
                 $('#edit-lastname').val(student.lastname);
                 $('#edit-dob').val(student.dob);
                 $('#edit-place_of_birth').val(student.place_of_birth);
-                $('#edit-dob').val(student.dob);
+                $('#edit-dob').val(student.formatted_dob);
                 $('#edit-gender').val(student.gender);
                 $('#edit-classroom').val(student.current_classroom.id);
                 $('#edit-place_of_birth').val(student.place_of_birth);
@@ -389,12 +389,13 @@
 
                 $('#update-student-btn').click(function(){
                     var data = $('#edit-student-form').serialize();
-                    console.log(data);
+                    data += "&_method=PATCH";                    
                     $.ajax({
                         method: "POST",
                         url: "/admin/students/"+id,
-                        data: {_method: "PATCH", data: data},
+                        data: data,
                         success: function(response){
+                            console.log(response);
                             $('#edit-student-modal').modal('hide');
                             table.ajax.reload(null, false);
                             Toastify({
@@ -407,7 +408,7 @@
                             }).showToast();
                         },
                         error: function(response){
-                            console.log(response);
+                            console.log(response.responseJSON);
                         }
                     });
                 });
