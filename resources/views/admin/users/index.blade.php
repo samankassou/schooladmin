@@ -63,6 +63,13 @@
 <script src="{{ asset('vendor/datatables/js/dataTables.bootstrap5.min.js') }}"></script>
 <script src="{{ asset('mazer/assets/vendors/toastify/toastify.js') }}"></script>
 <script>
+    $(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    });
     var table = $('#users-datatable').DataTable({
         language: {
             url: "{{ asset('vendor/datatables/lang/French.json') }}"
@@ -95,5 +102,30 @@
             },
         ]
     });
+    function delete_user(id)
+    {
+        $('#delete-btn').click(function(){
+            $.ajax({
+                method: "POST",
+                url: "/admin/users/"+id,
+                data: {_method: "DELETE"},
+                dataType: "JSON",
+                success: function(response){
+                    table.ajax.reload(null, false);
+                    Toastify({
+                        text: "Utilisateur supprimé avec succès!",
+                        duration: 3000,
+                        close:true,
+                        gravity:"top",
+                        position: "right",
+                        backgroundColor: "#4fbe87",
+                    }).showToast();
+                },
+                error: function(response){
+                    console.log(response);
+                }
+            });
+        });
+    }
 </script>
 @endsection
