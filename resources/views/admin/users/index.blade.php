@@ -26,6 +26,57 @@
         </div>
     </div>
 </section>
+{{-- Create user modal --}}
+<div class="modal fade text-left" id="create-user-modal" tabindex="-1" aria-labelledby="myModalLabel33" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel33">Ajouter un utilisateur </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="create-user-form">
+                    <label for="name">Nom(s): </label>
+                    <div class="form-group">
+                        <input type="text" id="name" placeholder="Nom(s)" class="form-control" name="name">
+                        <div class="invalid-feedback" id="name-error">
+                            
+                        </div>
+                    </div>
+                    
+                    <label>Email: </label>
+                    <div class="form-group">
+                        <input id="email" type="email" placeholder="Email" class="form-control" name="email">
+                        <div class="invalid-feedback" id="email-error">
+                            
+                        </div>
+                    </div>
+
+                    <label>Photo: </label>
+                    <div class="form-group">
+                        <input id="avatar" type="file" class="form-control" name="avatar">
+                        <div class="invalid-feedback" id="avatar-error">
+                            
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Annuler</span>
+                </button>
+                <button id="save-user-btn" type="button" class="btn btn-primary ml-1">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Enregistrer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{{--! Create user modal --}}
 <div class="modal-danger me-1 mb-1 d-inline-block">
     <!--Danger theme Modal -->
     <div class="modal fade text-left" id="delete-user-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
@@ -102,6 +153,35 @@
             },
         ]
     });
+
+    $('#save-user-btn').click(function(e){
+        var data = $('#create-user-form').serialize();
+        $.ajax({
+            method: "POST",
+            url: "{{ route('admin.users.store') }}",
+            data: data,
+            success: function(response){
+                reset_modal();
+                $('#create-user-modal').modal('hide');
+                table.ajax.reload(null, false);
+                Toastify({
+                    text: "Utilisateur enregistré avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
+            },
+            error: function(response){
+                var errors = response.responseJSON.errors;
+                for (const error in errors) {
+                    $('#'+error+'-error').html(errors[error][0]).show();
+                }
+            }
+        });
+    });
+
     function delete_user(id)
     {
         $('#delete-btn').click(function(){
@@ -126,6 +206,13 @@
                 }
             });
         });
+    }
+
+    function reset_modal()
+    {
+        $('#create-user-form').trigger("reset");
+        $('#edit-user-form').trigger("reset");
+        $("[id$='-error']").html('');
     }
 </script>
 @endsection

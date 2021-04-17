@@ -63,10 +63,7 @@ class UserController extends Controller
         if($request->hasFile('avatar')){
             $user->addMediaFromRequest('avatar')->toMediaCollection('avatars', 'public');
         }
-        return redirect()->route('admin.users.index')->with([
-            'alert' => 'success',
-            'message' => 'Utilisateur enregistré'
-        ]);
+        return response()->json(['message' => 'User created successfully!']);
     }
 
     public function toggleStatus(User $user)
