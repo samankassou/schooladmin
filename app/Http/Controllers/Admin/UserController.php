@@ -123,6 +123,9 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if(auth()->user()->id == $user->id){
+            return response()->json(['message' => 'User deleted!']);
+        }
         $user->delete();
         return response()->json(['message' => 'User deleted!']);
     }
