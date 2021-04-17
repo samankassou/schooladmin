@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use App\Models\AcademicYear;
 
 class StudentController extends Controller
 {
@@ -22,7 +23,7 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return Datatables::of(Student::all())
+            return Datatables::of(Student::orderBy('firstname')->get())
                 ->addIndexColumn()
                 ->addColumn('action', function(Student $student){
                     $actionBtns = "<a href='/admin/students/$student->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
@@ -33,8 +34,8 @@ class StudentController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        $classrooms = Classroom::all();
-        return view('admin.students.index2', compact('classrooms'));
+        $classrooms = Classroom::where(['academic_year_id' => AcademicYear::current()->id])->get();
+        return view('admin.students.index', compact('classrooms'));
     }
     /**
      * Display a listing of the resource.

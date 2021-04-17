@@ -33,13 +33,11 @@ class Student extends Model
     {
         return $this->classrooms()->firstWhere('academic_year_id', AcademicYear::current()->id);
     }
-
-    public function getDobAttribute($dob)
-    {
-        return Carbon::parse($dob)->format('d/m/Y');
-    }
-
     public function getFormattedDobAttribute()
+    {
+        return Carbon::parse($this->attributes['dob'])->format('d/m/Y');
+    }
+    public function getDobAttribute()
     {
         return Carbon::parse($this->attributes['dob'])->format('Y-m-d');
     }
