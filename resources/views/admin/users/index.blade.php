@@ -155,11 +155,18 @@
     });
 
     $('#save-user-btn').click(function(e){
-        var data = $('#create-user-form').serialize();
+        var data = new FormData($('#create-user-form')[0]);
+        $(this).attr('disabled', true);
+        $(this).html('Enregistrement...');
         $.ajax({
             method: "POST",
             url: "{{ route('admin.users.store') }}",
             data: data,
+            async: false,
+            cache: false,
+            enctypeType: 'multipart/form-data',
+            contentType:false,
+            processData: false,
             success: function(response){
                 reset_modal();
                 $('#create-user-modal').modal('hide');
@@ -178,6 +185,10 @@
                 for (const error in errors) {
                     $('#'+error+'-error').html(errors[error][0]).show();
                 }
+            },
+            complete: function(response){
+                $('#save-user-btn').attr('disabled', false);
+                $('#save-user-btn').html('Enregistrer');
             }
         });
     });
