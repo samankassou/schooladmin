@@ -405,17 +405,20 @@
                                     position: "right",
                                     backgroundColor: "#4fbe87",
                                 }).showToast();
+                                return false;
                             },
                             error: function(response){
                                 console.log(response.responseJSON);
                             }
                         });
+                        return false;
                     });
             },
             error: function(response){
                 console.log(response);
             }
       });
+    return false;
     
   }
 </script>

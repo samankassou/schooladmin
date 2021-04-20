@@ -30,5 +30,5 @@ Route::group([
     Route::resource('users', UserController::class);
     Route::resource('students', StudentController::class);
     Route::resource('roles', RoleController::class);
-    Route::post('users/toggleStatus/{user}', [UserController::class, 'toggleStatus']);
+    Route::post('users/{user}/toggleUserStatus', [UserController::class, 'toggleUserStatus']);
 });

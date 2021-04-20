@@ -27,13 +27,26 @@ class UserController extends Controller
         if($request->ajax()){
             return Datatables::of($users)
             ->addIndexColumn()
+            ->addColumn('status', function(User $user){
+                if($user->status == 1){
+                    $btn = '<div class="form-check form-switch">
+                                <input class="form-check-input" style="cursor: pointer" onclick="toggleUserStatus('.$user->id.')" type="checkbox" checked>
+                            </div>';
+                }else{
+                    $btn = '<div class="form-check form-switch">
+                            <input class="form-check-input" style="cursor: pointer" onclick="toggleUserStatus('.$user->id.')" type="checkbox">
+                        </div>';
+                }
+                
+                return $btn;
+            })
             ->addColumn('action', function(User $user){
                 $actionBtns = "<a href='/admin/users/$user->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
                 $actionBtns .= "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-user-modal' onclick='edit_user(".$user->id.")'><i class='bi bi-pencil'></i></button>";
                 $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-user-modal' onclick='delete_user(".$user->id.")'><i class='bi bi-trash'></i></button>";
                 return $actionBtns;
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['status', 'action'])
             ->make(true);
         }
         return view('admin.users.index');
@@ -66,15 +79,12 @@ class UserController extends Controller
         return response()->json(['message' => 'User created successfully!']);
     }
 
-    public function toggleStatus(User $user)
+    public function toggleUserStatus(User $user)
     {
         $user->status = !$user->status;
         $user->save();
 
-        return response()->json([
-            'alert' => 'success',
-            'message' => 'User status updated'
-        ]);
+        return response()->json(['message' => 'User status updated']);
     }
 
     /**

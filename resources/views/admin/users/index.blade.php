@@ -19,6 +19,7 @@
                         <th>Photo</th>
                         <th>Nom(s)</th>
                         <th>Email</th>
+                        <th>Status</th>
                         <th>Options</th>
                     </tr>
                 </thead>
@@ -146,6 +147,10 @@
             {data: 'name', name: 'name'},
             {data: 'email', name: 'email'},
             {
+                data: 'status', 
+                name: 'status',
+            },
+            {
                 data: 'action', 
                 name: 'action', 
                 orderable: false, 
@@ -187,15 +192,27 @@
                 }
             },
             complete: function(response){
-                $('#save-user-btn').attr('disabled', false);
+                $('#save-user-btn').removeAttr('disabled', false);
                 $('#save-user-btn').html('Enregistrer');
             }
         });
+        return false;
     });
 
     function delete_user(id)
     {
+        
         $('#delete-btn').click(function(){
+            if(id === {{ auth()->user()->id }}){
+                        Toastify({
+                            text: "Vous ne pouvez pas supprimer le compte actuel!",
+                            close:true,
+                            gravity:"top",
+                            position: "right",
+                            backgroundColor: "#ff0000",
+                        }).showToast();
+                return;
+            }
             $.ajax({
                 method: "POST",
                 url: "/admin/users/"+id,
@@ -216,7 +233,24 @@
                     console.log(response);
                 }
             });
+            return false;
         });
+    }
+
+    function toggleUserStatus(id)
+    {
+        $.ajax({
+                method: "POST",
+                url: "/admin/users/"+id+"/toggleUserStatus",
+                dataType: "JSON",
+                success: function(response){
+                    console.log(response);
+                },
+                error: function(response){
+                    console.log(response);
+                }
+            });
+            return false;
     }
 
     function reset_modal()
