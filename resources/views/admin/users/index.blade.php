@@ -87,6 +87,7 @@
                     <h5 class="modal-title white" id="myModalLabel120">
                         Supprimer un utilisateur
                     </h5>
+                    <input type="hidden">
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
@@ -99,7 +100,7 @@
                         <i class="bx bx-x d-block d-sm-none"></i>
                         <span class="d-none d-sm-block">Annuler</span>
                     </button>
-                    <button id="delete-btn" type="button" class="btn btn-danger ml-1" data-bs-dismiss="modal">
+                    <button id="delete-user-btn" type="button" class="btn btn-danger ml-1" data-bs-dismiss="modal">
                         <i class="bx bx-check d-block d-sm-none"></i>
                         <span class="d-none d-sm-block">supprimer</span>
                     </button>
@@ -115,6 +116,7 @@
 <script src="{{ asset('vendor/datatables/js/dataTables.bootstrap5.min.js') }}"></script>
 <script src="{{ asset('mazer/assets/vendors/toastify/toastify.js') }}"></script>
 <script>
+        document.getElementById('delete-user-btn').addEventListener('click', deleteUser);
     $(function () {
         $.ajaxSetup({
             headers: {
@@ -201,40 +203,7 @@
 
     function delete_user(id)
     {
-        
-        $('#delete-btn').click(function(){
-            if(id === {{ auth()->user()->id }}){
-                        Toastify({
-                            text: "Vous ne pouvez pas supprimer le compte actuel!",
-                            close:true,
-                            gravity:"top",
-                            position: "right",
-                            backgroundColor: "#ff0000",
-                        }).showToast();
-                return;
-            }
-            $.ajax({
-                method: "POST",
-                url: "/admin/users/"+id,
-                data: {_method: "DELETE"},
-                dataType: "JSON",
-                success: function(response){
-                    table.ajax.reload(null, false);
-                    Toastify({
-                        text: "Utilisateur supprimé avec succès!",
-                        duration: 3000,
-                        close:true,
-                        gravity:"top",
-                        position: "right",
-                        backgroundColor: "#4fbe87",
-                    }).showToast();
-                },
-                error: function(response){
-                    console.log(response);
-                }
-            });
-            return false;
-        });
+        $('#delete-user-modal input[type="hidden"]').val(id);
     }
 
     function toggleUserStatus(id)
@@ -251,6 +220,42 @@
                 }
             });
             return false;
+    }
+
+    function deleteUser()
+    {
+        var id = $('#delete-user-modal input[type="hidden"]').val();
+        if(id == {{ auth()->user()->id }}){
+            Toastify({
+                text: "Vous ne pouvez pas supprimer le compte actuel!",
+                close:true,
+                gravity:"top",
+                position: "right",
+                backgroundColor: "#ff0000",
+            }).showToast();
+            return;
+        }
+        $.ajax({
+            method: "POST",
+            url: "/admin/users/"+id,
+            data: {_method: "DELETE"},
+            dataType: "JSON",
+            success: function(response){
+                table.ajax.reload(null, false);
+                Toastify({
+                    text: "Utilisateur supprimé avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
+            },
+            error: function(response){
+                console.log(response);
+            }
+        });
+        return false;
     }
 
     function reset_modal()

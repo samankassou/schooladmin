@@ -265,7 +265,7 @@
 <script src="{{ asset('vendor/datatables/js/dataTables.bootstrap5.min.js') }}"></script>
 <script src="{{ asset('mazer/assets/vendors/toastify/toastify.js') }}"></script>
 <script>
-    document.getElementById('update-student-btn').addEventListener('click', updateUser);
+    document.getElementById('update-student-btn').addEventListener('click', updateStudent);
     var table = $('#students-datatable').DataTable({
         language: {
             url: "{{ asset('vendor/datatables/lang/French.json') }}"
@@ -397,7 +397,7 @@
     
   }
 
-  function updateUser()
+  function updateStudent()
   {
     var data = $('#edit-student-form').serialize();
     var id = $('#userId').val();
