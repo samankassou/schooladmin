@@ -138,6 +138,7 @@
             </div>
             <div class="modal-body">
                 <form action="#" id="edit-student-form">
+                    <input type="hidden" id="userId">
                     <label for="firstname">Nom(s): </label>
                     <div class="form-group">
                         <input type="text" id="edit-firstname" placeholder="Nom(s) de l'élève" class="form-control" name="firstname">
@@ -264,6 +265,7 @@
 <script src="{{ asset('vendor/datatables/js/dataTables.bootstrap5.min.js') }}"></script>
 <script src="{{ asset('mazer/assets/vendors/toastify/toastify.js') }}"></script>
 <script>
+    document.getElementById('update-student-btn').addEventListener('click', updateUser);
     var table = $('#students-datatable').DataTable({
         language: {
             url: "{{ asset('vendor/datatables/lang/French.json') }}"
@@ -371,6 +373,7 @@
   }
   function edit_student(id)
   {
+      $('#userId').val(id);
       $.ajax({
         url: "/admin/students/"+id+"/edit",
             success: function(response){
@@ -385,34 +388,6 @@
                 $('#edit-place_of_birth').val(student.place_of_birth);
                 $('#edit-mother_name').val(student.mother_name);
                 $('#edit-father_name').val(student.father_name);
-
-                $('#update-student-btn').click(function(){
-                    var data = $('#edit-student-form').serialize();
-                    data += "&_method=PATCH";                    
-                    $.ajax({
-                            method: "POST",
-                            url: "/admin/students/"+id,
-                            data: data,
-                            success: function(response){
-                                console.log(response);
-                                $('#edit-student-modal').modal('hide');
-                                table.ajax.reload(null, false);
-                                Toastify({
-                                    text: "Modification effectuée avec succès!",
-                                    duration: 3000,
-                                    close:true,
-                                    gravity:"top",
-                                    position: "right",
-                                    backgroundColor: "#4fbe87",
-                                }).showToast();
-                                return false;
-                            },
-                            error: function(response){
-                                console.log(response.responseJSON);
-                            }
-                        });
-                        return false;
-                    });
             },
             error: function(response){
                 console.log(response);
@@ -420,6 +395,36 @@
       });
     return false;
     
+  }
+
+  function updateUser()
+  {
+    var data = $('#edit-student-form').serialize();
+    var id = $('#userId').val();
+    data += "&_method=PATCH";                    
+    $.ajax({
+            method: "POST",
+            url: "/admin/students/"+id,
+            data: data,
+            success: function(response){
+                console.log(response);
+                $('#edit-student-modal').modal('hide');
+                table.ajax.reload(null, false);
+                Toastify({
+                    text: "Modification effectuée avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
+                return false;
+            },
+            error: function(response){
+                console.log(response.responseJSON);
+            }
+        });
+        return false;
   }
 </script>
 @endsection
