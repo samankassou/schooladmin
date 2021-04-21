@@ -21,7 +21,7 @@
                         <th>Nom(s)</th>
                         <th>Email</th>
                         <th>Status</th>
-                        <th>Options</th>
+                        <th style="width: 100px">Options</th>
                     </tr>
                 </thead>
             </table>
@@ -62,6 +62,12 @@
                         <div class="invalid-feedback" id="avatar-error">
                             
                         </div>
+                    </div>
+
+                    <div class="col-md-12 mb-2">
+                        <img id="preview-image-before-upload" src="https://www.riobeauty.co.uk/images/product_image_not_found.gif"
+                            alt="preview image" style="max-height: 250px;">
+                       <br> <span class="btn" id="remove-img" onclick="removeImg" style="display: none">Retirer</span>
                     </div>
                 </form>
             </div>
@@ -125,6 +131,25 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+        $('#remove-img').click(function(){
+            $('#preview-image-before-upload').attr('src', "https://www.riobeauty.co.uk/images/product_image_not_found.gif");
+            $('#avatar').val('');
+            $(this).css('display', 'none');
+        });
+
+        $('#avatar').change(function(){
+            
+            let reader = new FileReader();
+            
+            reader.onload = (e) => { 
+            
+                $('#preview-image-before-upload').attr('src', e.target.result); 
+                $('#remove-img').css('display', 'inline-block');
+            }
+            
+            reader.readAsDataURL(this.files[0]); 
+        
+        });
     });
     var table = $('#users-datatable').DataTable({
         language: {
@@ -166,8 +191,7 @@
 
     $('#save-user-btn').click(function(e){
         var data = new FormData($('#create-user-form')[0]);
-        $(this).attr('disabled', true);
-        $(this).html('Enregistrement...');
+        $(this).addClass('disabled').html('Enregistrement...').attr('disabled', true);
         $.ajax({
             method: "POST",
             url: "{{ route('admin.users.store') }}",
@@ -197,8 +221,9 @@
                 }
             },
             complete: function(response){
-                $('#save-user-btn').removeAttr('disabled', false);
+                $('#save-user-btn').removeClass('disabled');
                 $('#save-user-btn').html('Enregistrer');
+                console.log('complete');
             }
         });
         return false;
@@ -261,11 +286,17 @@
         return false;
     }
 
+    $('#create-user-modal, #edit-user-modal').on('hide.bs.modal', function(){
+        reset_modal();
+    });
+
     function reset_modal()
     {
         $('#create-user-form').trigger("reset");
         $('#edit-user-form').trigger("reset");
         $("[id$='-error']").html('');
+        $('#remove-img').css('display', 'none');
+        $('#preview-image-before-upload').attr('src', "https://www.riobeauty.co.uk/images/product_image_not_found.gif");
     }
 </script>
 @endsection
