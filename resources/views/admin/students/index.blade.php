@@ -139,7 +139,7 @@
             </div>
             <div class="modal-body">
                 <form action="#" id="edit-student-form">
-                    <input type="hidden" id="userId">
+                    <input type="hidden" id="studentId">
                     <label for="firstname">Nom(s): </label>
                     <div class="form-group">
                         <input type="text" id="edit-firstname" placeholder="Nom(s) de l'élève" class="form-control" name="firstname">
@@ -376,7 +376,7 @@
   }
   function edit_student(id)
   {
-      $('#userId').val(id);
+      $('#studentId').val(id);
       $.ajax({
         url: "/admin/students/"+id+"/edit",
             success: function(response){
@@ -403,7 +403,7 @@
   function updateStudent()
   {
     var data = $('#edit-student-form').serialize();
-    var id = $('#userId').val();
+    var id = $('#studentId').val();
     data += "&_method=PATCH";                    
     $.ajax({
             method: "POST",

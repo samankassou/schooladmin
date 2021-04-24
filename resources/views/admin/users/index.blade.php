@@ -85,6 +85,64 @@
     </div>
 </div>
 {{--! Create user modal --}}
+{{-- Edit user modal --}}
+<div class="modal fade text-left" id="edit-user-modal" tabindex="-1" aria-labelledby="myModalLabel33" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel33">Modifier un utilisateur </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="edit-user-form">
+                    <input type="hidden" id="userId">
+                    <label for="name">Nom(s): </label>
+                    <div class="form-group">
+                        <input type="text" id="edit-name" placeholder="Nom(s)" class="form-control" name="name">
+                        <div class="invalid-feedback" id="edit-name-error">
+                            
+                        </div>
+                    </div>
+                    
+                    <label>Email: </label>
+                    <div class="form-group">
+                        <input id="edit-email" type="email" placeholder="Email" class="form-control" name="email">
+                        <div class="invalid-feedback" id="edit-email-error">
+                            
+                        </div>
+                    </div>
+
+                    <label>Photo: </label>
+                    <div class="form-group">
+                        <input id="edit-avatar" type="file" class="form-control" name="avatar">
+                        <div class="invalid-feedback" id="edit-avatar-error">
+                            
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mb-2">
+                        <img id="edit-preview-image-before-upload" src="https://www.riobeauty.co.uk/images/product_image_not_found.gif"
+                            alt="preview image" style="max-height: 250px;">
+                       <br> <span class="btn" id="edit-remove-img" onclick="removeEditImg" style="display: none">Retirer</span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Annuler</span>
+                </button>
+                <button id="save-user-btn" type="button" class="btn btn-primary ml-1">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Enregistrer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{{--! Edit user modal --}}
 <div class="modal-danger me-1 mb-1 d-inline-block">
     <!--Danger theme Modal -->
     <div class="modal fade text-left" id="delete-user-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
@@ -190,8 +248,8 @@
     });
 
     $('#save-user-btn').click(function(e){
+        $(this).addClass('disabled').text('Enregistrement...').attr('disabled', true);
         var data = new FormData($('#create-user-form')[0]);
-        $(this).addClass('disabled').html('Enregistrement...').attr('disabled', true);
         $.ajax({
             method: "POST",
             url: "{{ route('admin.users.store') }}",
@@ -221,8 +279,7 @@
                 }
             },
             complete: function(response){
-                $('#save-user-btn').removeClass('disabled');
-                $('#save-user-btn').html('Enregistrer');
+                $('#save-user-btn').removeClass('disabled').text('Enregistrer').attr('disabled', false);
                 console.log('complete');
             }
         });
@@ -248,6 +305,28 @@
                 }
             });
             return false;
+    }
+
+    function edit_user(id)
+    {
+        $('#userId').val(id);
+        $.ajax({
+            url: "/admin/users/"+id+"/edit",
+                success: function(response){
+                    let user = response.user;
+                    $('#edit-name').val(user.name);
+                    $('#edit-email').val(user.email);
+                    if(user.avatar_url){
+                        $('#edit-preview-image-before-upload').attr('src', user.avatar_url);
+                        $('#edit-remove-img').show();
+                    }
+                },
+                error: function(response){
+                    console.log(response);
+                }
+        });
+        return false;
+        
     }
 
     function deleteUser()

@@ -106,7 +106,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        $user->avatar_url = !empty($user->avatar) ? $user->avatar->getUrl('avatar-thumb') : null;
+        return response()->json([
+            'user' => $user
+        ]);
     }
 
     /**
