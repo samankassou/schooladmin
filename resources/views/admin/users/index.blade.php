@@ -1,6 +1,7 @@
 @extends('layouts.app', ['title' => 'Utilisateurs'])
 @section('styles')
 <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/toastify/toastify.css') }}">
+<link rel="stylesheet" href="{{ asset('mazer/assets/vendors/choices.js/choices.min.css') }}">
 <link href="{{ asset('vendor/datatables/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet">
 <link href="{{ asset('vendor/datatables/css/responsive.dataTables.min.css') }}" rel="stylesheet">
 @endsection
@@ -55,6 +56,16 @@
                         <div class="invalid-feedback" id="email-error">
                             
                         </div>
+                    </div>
+
+                    <label>Rôle: </label>
+                    <div class="form-group">
+                        <select class="choices" name="role" id="role">
+                            <option value="">Choisir un rôle</option>
+                            @foreach ($usersRoles as $role)
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <label>Photo: </label>
@@ -182,6 +193,7 @@
 <script src="{{ asset('vendor/datatables/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('vendor/datatables/js/dataTables.bootstrap5.min.js') }}"></script>
 <script src="{{ asset('mazer/assets/vendors/toastify/toastify.js') }}"></script>
+<script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
 <script>
         document.getElementById('delete-user-btn').addEventListener('click', deleteUser);
     $(function () {

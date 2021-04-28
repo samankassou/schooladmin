@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use Spatie\Permission\Models\Role;
 use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
@@ -20,12 +21,12 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::all(['id', 'name', 'email', 'status'])->each(function($user){
-            $user->avatar_url = !empty($user->avatar) ? $user->avatar->getUrl('avatar-thumb') : null;
-            $user->role = $user->getRoleNames()[0];
-            unset($user->media);
-        });
         if($request->ajax()){
+            $users = User::all(['id', 'name', 'email', 'status'])->each(function($user){
+                $user->avatar_url = !empty($user->avatar) ? $user->avatar->getUrl('avatar-thumb') : null;
+                $user->role = $user->getRoleNames()[0];
+                unset($user->media);
+            });
             return Datatables::of($users)
             ->addIndexColumn()
             ->addColumn('status', function(User $user){
@@ -50,7 +51,8 @@ class UserController extends Controller
             ->rawColumns(['status', 'action'])
             ->make(true);
         }
-        return view('admin.users.index');
+        $usersRoles = Role::all();
+        return view('admin.users.index', compact('usersRoles'));
     }
 
     /**
@@ -71,12 +73,13 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $password = bcrypt(Str::random(8));
+        $password = bcrypt('password');
         
         $user = User::create($request->validated() + ['password' => $password]);
         if($request->hasFile('avatar')){
             $user->addMediaFromRequest('avatar')->toMediaCollection('avatars', 'public');
         }
+        $user->assignRole(Role::findById($request->role)->name);
         return response()->json(['message' => 'User created successfully!']);
     }
 
