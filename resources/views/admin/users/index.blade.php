@@ -19,8 +19,9 @@
                         <th>No</th>
                         <th>Photo</th>
                         <th>Nom(s)</th>
+                        <th>Rôle</th>
                         <th>Email</th>
-                        <th>Status</th>
+                        <th>Statut</th>
                         <th style="width: 100px">Options</th>
                     </tr>
                 </thead>
@@ -233,6 +234,7 @@
                 },
             },
             {data: 'name', name: 'name'},
+            {data: 'role', name: 'role'},
             {data: 'email', name: 'email'},
             {
                 data: 'status', 

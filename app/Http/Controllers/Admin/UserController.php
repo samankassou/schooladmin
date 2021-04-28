@@ -22,6 +22,7 @@ class UserController extends Controller
     {
         $users = User::all(['id', 'name', 'email', 'status'])->each(function($user){
             $user->avatar_url = !empty($user->avatar) ? $user->avatar->getUrl('avatar-thumb') : null;
+            $user->role = $user->getRoleNames()[0];
             unset($user->media);
         });
         if($request->ajax()){
