@@ -41,6 +41,13 @@
                             </a>
                         </li>
 
+                        <li class="sidebar-item  {{ request()->routeIs('admin.teachers.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.teachers.index') }}" class='sidebar-link'>
+                                <i class="bi bi-people-fill"></i>
+                                <span>Enseignants</span>
+                            </a>
+                        </li>
+
                         <li class="sidebar-item  {{ request()->routeIs('admin.classrooms.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.classrooms.index') }}" class='sidebar-link'>
                                 <i class="bi bi-people-fill"></i>

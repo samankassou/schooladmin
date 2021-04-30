@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\ClassroomController;
 
 /*
@@ -32,5 +33,6 @@ Route::group([
     Route::resource('students', StudentController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('classrooms', ClassroomController::class);
+    Route::resource('teachers', TeacherController::class);
     Route::post('users/{user}/toggleUserStatus', [UserController::class, 'toggleUserStatus']);
 });
