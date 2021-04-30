@@ -18,7 +18,9 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Photo</th>
                         <th>Nom(s)</th>
+                        <th>Matières</th>
                         <th style="width: 100px">Options</th>
                     </tr>
                 </thead>
@@ -54,13 +56,36 @@
         },
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {
+                data: 'avatar_url', 
+                name: 'avatar_url', 
+                orderable: false, 
+                searchable: false,
+                render: function(avatar_url){
+                    return `<div class="avatar avatar-lg">
+                                <img src="${avatar_url ?? '/images/default-user.jpg'}" alt="user_avatar">
+                            </div>`;
+                },
+            },
             {data: 'name', name: 'name'},
+            {
+                data: 'courses',
+                name: 'courses',
+                orderable: false, 
+                searchable: false,
+                render: function(courses){
+                    if(courses.length){
+                        return courses[0];
+                    }
+                    return "Aucune";
+                }
+            },
             {
                 data: 'action', 
                 name: 'action', 
                 orderable: false, 
                 searchable: false
-            },
+            }
         ]
     });
 </script>
