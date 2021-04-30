@@ -16,9 +16,13 @@ class TeacherController extends Controller
      */
     public function index(Request $request)
     {
-        $teachers = User::all()->filter(function($user){
+        $teachers = User::with(['courses'])->get()->filter(function($user){
             return $user->roles[0]->name === "Enseignant";
+        })
+        ->each(function($teacher){
+            $teacher->avatar_url = !empty($teacher->avatar) ? $teacher->avatar->getUrl('avatar-thumb') : null;
         });
+        
         if ($request->ajax()) {
             return Datatables::of($teachers)
                 ->addIndexColumn()
