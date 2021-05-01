@@ -74,8 +74,12 @@
                 orderable: false, 
                 searchable: false,
                 render: function(courses){
+                    let coursesNames = "";
                     if(courses.length){
-                        return courses[0];
+                        for(course of courses){
+                            coursesNames += course.name + ", ";
+                        }
+                        return coursesNames;
                     }
                     return "Aucune";
                 }
