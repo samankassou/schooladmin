@@ -1,10 +1,4 @@
-@extends('layouts.app', ['title' => 'Matières'])
-@section('styles')
-<link rel="stylesheet" href="{{ asset('mazer/assets/vendors/toastify/toastify.css') }}">
-<link rel="stylesheet" href="{{ asset('mazer/assets/vendors/choices.js/choices.min.css') }}">
-<link href="{{ asset('vendor/datatables/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet">
-<link href="{{ asset('vendor/datatables/css/responsive.dataTables.min.css') }}" rel="stylesheet">
-@endsection
+@extends('layouts.datatable', ['title' => 'Matières'])
 
 @section('content')
 <section class="section">
@@ -97,11 +91,7 @@
 {{--! Delete Course Modal --}}
 @endsection
 @section('scripts')
-<script src="{{ asset('vendor/datatables/js/jquery-3.5.1.js') }}"></script>
-<script src="{{ asset('vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('vendor/datatables/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('vendor/datatables/js/dataTables.bootstrap5.min.js') }}"></script>
-<script src="{{ asset('mazer/assets/vendors/toastify/toastify.js') }}"></script>
+@parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
 <script>
     $(function () {

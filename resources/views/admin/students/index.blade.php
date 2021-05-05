@@ -1,9 +1,4 @@
-@extends('layouts.app', ['title' => 'Elèves'])
-@section('styles')
-<link rel="stylesheet" href="{{ asset('mazer/assets/vendors/toastify/toastify.css') }}">
-<link href="{{ asset('vendor/datatables/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet">
-<link href="{{ asset('vendor/datatables/css/responsive.dataTables.min.css') }}" rel="stylesheet">
-@endsection
+@extends('layouts.datatable', ['title' => 'Elèves'])
 
 @section('content')
 <section class="section">
@@ -261,11 +256,7 @@
 {{--! Delete student modal --}}
 @endsection
 @section('scripts')
-<script src="{{ asset('vendor/datatables/js/jquery-3.5.1.js') }}"></script>
-<script src="{{ asset('vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('vendor/datatables/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('vendor/datatables/js/dataTables.bootstrap5.min.js') }}"></script>
-<script src="{{ asset('mazer/assets/vendors/toastify/toastify.js') }}"></script>
+@parent
 <script>
     document.getElementById('update-student-btn').addEventListener('click', updateStudent);
     var table = $('#students-datatable').DataTable({
