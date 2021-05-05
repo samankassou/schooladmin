@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCourseRequest;
+use SebastianBergmann\Environment\Console;
 
 class CourseController extends Controller
 {
@@ -75,7 +76,11 @@ class CourseController extends Controller
      */
     public function destroy(Course $course)
     {
+        if(count($course->teachers) != 0){
+            return response()->json(['success' => false, 'message' => 'This Course has some teachers!']);
+        }
+
         $course->delete();
-        return response()->json(['message' => 'Course deleted successfully!']);
+        return response()->json(['success' => true, 'message' => 'Course deleted successfully!']);
     }
 }

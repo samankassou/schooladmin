@@ -17,4 +17,9 @@ class Course extends Model
     {
         return $this->belongsTo(AcademicYear::class);
     }
+
+    public function teachers()
+    {
+        return $this->belongsToMany(User::class, 'course_teacher');
+    }
 }

@@ -177,15 +177,28 @@
             data: {_method: "DELETE"},
             dataType: "JSON",
             success: function(response){
-                table.ajax.reload(null, false);
-                Toastify({
-                    text: "Matière supprimée avec succès!",
-                    duration: 3000,
-                    close:true,
-                    gravity:"top",
-                    position: "right",
-                    backgroundColor: "#4fbe87",
-                }).showToast();
+                console.log(response.success);
+                if(response.success){
+                    table.ajax.reload(null, false);
+                    Toastify({
+                        text: "Matière supprimée avec succès!",
+                        duration: 3000,
+                        close:true,
+                        gravity:"top",
+                        position: "right",
+                        backgroundColor: "#4fbe87",
+                    }).showToast();
+                }else{
+                    Toastify({
+                        text: "Cette matière est liée à certains enseignants!",
+                        duration: 3000,
+                        close:true,
+                        gravity:"top",
+                        position: "right",
+                        backgroundColor: "#ff0000",
+                    }).showToast();
+                }
+                
             },
             error: function(response){
                 console.log(response);
