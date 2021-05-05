@@ -23,7 +23,7 @@ class CourseController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function($course){
                     $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-course-modal' onclick='edit_course(".$course->id.")'><i class='bi bi-pencil'></i></button>";
-                    $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-course-modal' onclick='delete_course(".$course->id.")'><i class='bi bi-trash'></i></button>";
+                    $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-course-modal' onclick='showDeleteCourseModal(".$course->id.")'><i class='bi bi-trash'></i></button>";
                     return $actionBtns;
                 })
                 ->rawColumns(['action'])
@@ -75,6 +75,7 @@ class CourseController extends Controller
      */
     public function destroy(Course $course)
     {
-        //
+        $course->delete();
+        return response()->json(['message' => 'Course deleted successfully!']);
     }
 }

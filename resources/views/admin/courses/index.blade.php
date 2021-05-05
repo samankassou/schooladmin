@@ -60,6 +60,41 @@
     </div>
 </div>
 {{--! Create course modal --}}
+
+{{-- Delete Course Modal --}}
+<div class="modal-danger me-1 mb-1 d-inline-block">
+    <!--Danger theme Modal -->
+    <div class="modal fade text-left" id="delete-course-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <form id="delete-course-modal" class="modal-content">
+                <div class="modal-header bg-danger">
+                    <h5 class="modal-title white" id="myModalLabel120">
+                        Supprimer une matière
+                    </h5>
+                    <input type="hidden">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <i data-feather="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Voulez-vous vraiment la supprimer?<br>
+                    <em>Vous ne pouvez pas supprimer une matière déjà liée à des enseignants</em>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                        <i class="bx bx-x d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Annuler</span>
+                    </button>
+                    <button id="delete-user-btn" type="button" class="btn btn-danger ml-1" data-bs-dismiss="modal">
+                        <i class="bx bx-check d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">supprimer</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{--! Delete Course Modal --}}
 @endsection
 @section('scripts')
 <script src="{{ asset('vendor/datatables/js/jquery-3.5.1.js') }}"></script>
@@ -75,6 +110,8 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        $('#delete-user-btn').click(deleteCourse);
     });
     var table = $('#courses-datatable').DataTable({
         language: {
@@ -124,6 +161,41 @@
                 }
             }
         });
+    });
+
+    function showDeleteCourseModal(id)
+    {
+        $('#delete-course-modal input[type="hidden"]').val(id);
+    }
+
+    function deleteCourse()
+    {
+        var id = $('#delete-course-modal input[type="hidden"]').val();
+        $.ajax({
+            method: "POST",
+            url: "/admin/courses/"+id,
+            data: {_method: "DELETE"},
+            dataType: "JSON",
+            success: function(response){
+                table.ajax.reload(null, false);
+                Toastify({
+                    text: "Matière supprimée avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
+            },
+            error: function(response){
+                console.log(response);
+            }
+        });
+        return false;
+    }
+
+    $('#create-course-modal, #edit-course-modal').on('hide.bs.modal', function(){
+        reset_modal();
     });
 
     function reset_modal()
