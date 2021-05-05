@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
+use App\Models\Course;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTeacherRequest;
 
 class TeacherController extends Controller
 {
@@ -34,17 +36,8 @@ class TeacherController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('admin.teachers.index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $courses = Course::all();
+        return view('admin.teachers.index', compact('courses'));
     }
 
     /**
@@ -53,9 +46,21 @@ class TeacherController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTeacherRequest $request)
     {
-        //
+        $teacher = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'status' => true,
+            'password' => bcrypt('passsword')
+        ]);
+        if($request->hasFile('avatar')){
+            $teacher->addMediaFromRequest('avatar')->toMediaCollection('avatars', 'public');
+        }
+        $teacher->courses()->attach($request->courses);
+        $teacher->assignRole('Enseignant');
+
+        return response()->json(['message' => 'Teacher created successfully!']);
     }
 
     /**
