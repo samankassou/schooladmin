@@ -18,9 +18,7 @@ class TeacherController extends Controller
      */
     public function index(Request $request)
     {
-        $teachers = User::with(['courses'])->get()->filter(function($user){
-            return $user->roles[0]->name === "Enseignant";
-        })
+        $teachers = User::role('Enseignant')->with(['courses'])->get()
         ->each(function($teacher){
             $teacher->avatar_url = !empty($teacher->avatar) ? $teacher->avatar->getUrl('avatar-thumb') : null;
         });
@@ -30,7 +28,7 @@ class TeacherController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function($teacher){
                     $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-teacher-modal' onclick='edit_teacher(".$teacher->id.")'><i class='bi bi-pencil'></i></button>";
-                    $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-teacher-modal' onclick='delete_teacher(".$teacher->id.")'><i class='bi bi-trash'></i></button>";
+                    $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-teacher-modal' onclick='showDeleteTeacherModal(".$teacher->id.")'><i class='bi bi-trash'></i></button>";
                     return $actionBtns;
                 })
                 ->rawColumns(['action'])
@@ -105,6 +103,9 @@ class TeacherController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $teacher = User::find($id);
+        $teacher->courses()->detach();
+        $teacher->delete();
+        return response()->json(['message' => 'Teacher deleted!']);
     }
 }

@@ -22,14 +22,16 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $users = User::all(['id', 'name', 'email', 'status'])->each(function($user){
+            $users = 
+            $users = User::role(['Admin', 'Proviseur'])->get(['id', 'name', 'email', 'status'])
+            ->each(function($user){
                 $user->avatar_url = !empty($user->avatar) ? $user->avatar->getUrl('avatar-thumb') : null;
-                $user->role = $user->getRoleNames()[0];
+                $user->role = $user->roles[0];
                 unset($user->media);
             });
             return Datatables::of($users)
             ->addIndexColumn()
-            ->addColumn('status', function(User $user){
+            ->addColumn('status', function($user){
                 if($user->status == 1){
                     $btn = '<div class="form-check form-switch">
                                 <input class="form-check-input" style="cursor: pointer" onclick="toggleUserStatus('.$user->id.')" type="checkbox" checked>
@@ -42,7 +44,7 @@ class UserController extends Controller
                 
                 return $btn;
             })
-            ->addColumn('action', function(User $user){
+            ->addColumn('action', function($user){
                 $actionBtns = "<a href='/admin/users/$user->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
                 $actionBtns .= "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-user-modal' onclick='edit_user(".$user->id.")'><i class='bi bi-pencil'></i></button>";
                 $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-user-modal' onclick='delete_user(".$user->id.")'><i class='bi bi-trash'></i></button>";
@@ -51,7 +53,7 @@ class UserController extends Controller
             ->rawColumns(['status', 'action'])
             ->make(true);
         }
-        $usersRoles = Role::all();
+        $usersRoles = Role::whereNotIn('name', ['Enseignant'])->get();
         return view('admin.users.index', compact('usersRoles'));
     }
 
@@ -141,8 +143,9 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         if(auth()->user()->id == $user->id){
-            return response()->json(['message' => 'User deleted!']);
+            return response()->json(['message' => 'You cannot delete this user']);
         }
+        $user->courses()->detach();
         $user->delete();
         return response()->json(['message' => 'User deleted!']);
     }

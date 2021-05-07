@@ -188,7 +188,7 @@
 @parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
 <script>
-    $('delete-user-btn').on('click', deleteUser);
+    $('#delete-user-btn').click(deleteUser);
     $(function () {
         $.ajaxSetup({
             headers: {
@@ -239,7 +239,13 @@
                 },
             },
             {data: 'name', name: 'name'},
-            {data: 'role', name: 'role'},
+            {
+                data: 'role',
+                name: 'role',
+                render: function(role){
+                    return role.name
+                }
+            },
             {data: 'email', name: 'email'},
             {
                 data: 'status', 

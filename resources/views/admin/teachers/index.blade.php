@@ -94,6 +94,38 @@
     </div>
 </div>
 {{--! Create teacher modal --}}
+
+<div class="modal-danger me-1 mb-1 d-inline-block">
+    <!--Danger theme Modal -->
+    <div class="modal fade text-left" id="delete-teacher-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <form id="delete-teacher-modal" class="modal-content">
+                <div class="modal-header bg-danger">
+                    <h5 class="modal-title white" id="myModalLabel120">
+                        Supprimer un utilisateur
+                    </h5>
+                    <input type="hidden">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <i data-feather="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Voulez-vous vraiment le supprimer?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                        <i class="bx bx-x d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Annuler</span>
+                    </button>
+                    <button id="delete-teacher-btn" type="button" class="btn btn-danger ml-1" data-bs-dismiss="modal">
+                        <i class="bx bx-check d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">supprimer</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 @section('scripts')
 @parent
@@ -105,6 +137,8 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        $('#delete-teacher-btn').click(deleteTeacher);
 
         $('#remove-img').click(function(){
             $('#preview-image-before-upload').attr('src', "https://www.riobeauty.co.uk/images/product_image_not_found.gif");
@@ -161,7 +195,7 @@
                         for(course of courses){
                             coursesNames += course.name + ", ";
                         }
-                        return coursesNames;
+                        return coursesNames.slice(0, -1);
                     }
                     return "Aucune";
                 }
@@ -213,6 +247,37 @@
         });
         return false;
     });
+
+    function showDeleteTeacherModal(id)
+    {
+        $('#delete-teacher-modal input[type="hidden"]').val(id);
+    }
+
+    function deleteTeacher()
+    {
+        var id = $('#delete-teacher-modal input[type="hidden"]').val();
+        $.ajax({
+            method: "POST",
+            url: "/admin/teachers/"+id,
+            data: {_method: "DELETE"},
+            dataType: "JSON",
+            success: function(response){
+                table.ajax.reload(null, false);
+                Toastify({
+                    text: "Enseignant supprimé avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
+            },
+            error: function(response){
+                console.log(response);
+            }
+        });
+        return false;
+    }
 
     function reset_modal()
     {
