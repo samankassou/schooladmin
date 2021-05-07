@@ -32,22 +32,16 @@ class UserController extends Controller
             return Datatables::of($users)
             ->addIndexColumn()
             ->addColumn('status', function($user){
-                if($user->status == 1){
-                    $btn = '<div class="form-check form-switch">
-                                <input class="form-check-input" style="cursor: pointer" onclick="toggleUserStatus('.$user->id.')" type="checkbox" checked>
-                            </div>';
-                }else{
-                    $btn = '<div class="form-check form-switch">
-                            <input class="form-check-input" style="cursor: pointer" onclick="toggleUserStatus('.$user->id.')" type="checkbox">
+                $checked =  ($user->status == 1) ? "checked" : "";
+                $btn = '<div class="form-check form-switch">
+                            <input class="form-check-input" style="cursor: pointer" onclick="toggleUserStatus('.$user->id.')" type="checkbox" '.$checked.'>
                         </div>';
-                }
-                
                 return $btn;
             })
             ->addColumn('action', function($user){
                 $actionBtns = "<a href='/admin/users/$user->id' class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>";
-                $actionBtns .= "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-user-modal' onclick='edit_user(".$user->id.")'><i class='bi bi-pencil'></i></button>";
-                $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-user-modal' onclick='delete_user(".$user->id.")'><i class='bi bi-trash'></i></button>";
+                $actionBtns .= "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-user-modal' onclick='showEditUserModal(".$user->id.")'><i class='bi bi-pencil'></i></button>";
+                $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-user-modal' onclick='showDeleteUserModal(".$user->id.")'><i class='bi bi-trash'></i></button>";
                 return $actionBtns;
             })
             ->rawColumns(['status', 'action'])
@@ -90,7 +84,7 @@ class UserController extends Controller
         $user->status = !$user->status;
         $user->save();
 
-        return response()->json(['message' => 'User status updated']);
+        return response()->json(['message' => 'User\'s status updated']);
     }
 
     /**

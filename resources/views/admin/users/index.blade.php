@@ -63,6 +63,9 @@
                                 <option value="{{ $role->id }}">{{ $role->name }}</option>
                             @endforeach
                         </select>
+                        <div class="invalid-feedback" id="role-error">
+                            
+                        </div>
                     </div>
 
                     <label>Photo: </label>
@@ -261,7 +264,7 @@
     });
 
     $('#save-user-btn').click(function(e){
-        $(this).addClass('disabled').text('Enregistrement...').attr('disabled', true);
+        removeErrorMessages();
         var data = new FormData($('#create-user-form')[0]);
         $.ajax({
             method: "POST",
@@ -272,6 +275,9 @@
             enctypeType: 'multipart/form-data',
             contentType:false,
             processData: false,
+            beforeSend: function(){
+                $('#save-user-btn').addClass('disabled').text('Enregistrement...').attr('disabled', true);
+            },
             success: function(response){
                 reset_modal();
                 $('#create-user-modal').modal('hide');
@@ -291,15 +297,14 @@
                     $('#'+error+'-error').html(errors[error][0]).show();
                 }
             },
-            complete: function(response){
-                $('#save-user-btn').removeClass('disabled').text('Enregistrer').attr('disabled', false);
-                console.log('complete');
+            complete: function(){
+                $('#save-user-btn').removeClass('disabled').attr('disabled', false).text('Enregistrer');
             }
         });
         return false;
     });
 
-    function delete_user(id)
+    function showDeleteUserModal(id)
     {
         $('#delete-user-modal input[type="hidden"]').val(id);
     }
@@ -320,7 +325,7 @@
             return false;
     }
 
-    function edit_user(id)
+    function showEditUserModal(id)
     {
         $('#userId').val(id);
         $.ajax({
@@ -389,6 +394,11 @@
         $("[id$='-error']").html('');
         $('#remove-img').css('display', 'none');
         $('#preview-image-before-upload').attr('src', "https://www.riobeauty.co.uk/images/product_image_not_found.gif");
+    }
+
+    function removeErrorMessages()
+    {
+        $("[id$='-error']").html('');
     }
 </script>
 @endsection

@@ -18,20 +18,26 @@ class TeacherController extends Controller
      */
     public function index(Request $request)
     {
-        $teachers = User::role('Enseignant')->with(['courses'])->get()
-        ->each(function($teacher){
-            $teacher->avatar_url = !empty($teacher->avatar) ? $teacher->avatar->getUrl('avatar-thumb') : null;
-        });
-        
         if ($request->ajax()) {
+            $teachers = User::role('Enseignant')->with(['courses'])->get()
+            ->each(function($teacher){
+                $teacher->avatar_url = !empty($teacher->avatar) ? $teacher->avatar->getUrl('avatar-thumb') : null;
+            });
             return Datatables::of($teachers)
                 ->addIndexColumn()
+                ->addColumn('status', function($teacher){
+                    $checked =  ($teacher->status == 1) ? "checked" : "";
+                    $btn = '<div class="form-check form-switch">
+                                <input class="form-check-input" style="cursor: pointer" onclick="toggleTeacherStatus('.$teacher->id.')" type="checkbox" '.$checked.'>
+                            </div>';
+                    return $btn;
+                })
                 ->addColumn('action', function($teacher){
                     $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-teacher-modal' onclick='edit_teacher(".$teacher->id.")'><i class='bi bi-pencil'></i></button>";
                     $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-teacher-modal' onclick='showDeleteTeacherModal(".$teacher->id.")'><i class='bi bi-trash'></i></button>";
                     return $actionBtns;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['status','action'])
                 ->make(true);
         }
         $courses = Course::all();
@@ -68,17 +74,6 @@ class TeacherController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }

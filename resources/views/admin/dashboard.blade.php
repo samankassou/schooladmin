@@ -23,7 +23,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <h6 class="text-muted font-semibold">Elèves</h6>
-                                    <h6 class="font-extrabold mb-0">2500</h6>
+                                    <h6 class="font-extrabold mb-0">{{ $totals['students'] }}</h6>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <h6 class="text-muted font-semibold">Enseignants</h6>
-                                    <h6 class="font-extrabold mb-0">45</h6>
+                                    <h6 class="font-extrabold mb-0">{{ $totals['teachers'] }}</h6>
                                 </div>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <h6 class="text-muted font-semibold">Salles de classes</h6>
-                                    <h6 class="font-extrabold mb-0">32</h6>
+                                    <h6 class="font-extrabold mb-0">{{ $totals['classrooms'] }}</h6>
                                 </div>
                             </div>
                         </div>

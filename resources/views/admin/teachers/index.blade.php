@@ -18,7 +18,9 @@
                         <th>No</th>
                         <th>Photo</th>
                         <th>Nom(s)</th>
+                        <th>Email</th>
                         <th>Matières</th>
+                        <th>Statut</th>
                         <th style="width: 100px">Options</th>
                     </tr>
                 </thead>
@@ -57,11 +59,7 @@
                     <div class="form-group">
                         <select class="choices form-select multiple-remove" name="courses[]" id="courses" multiple="multiple">
                             @foreach ($courses as $course)
-                                @if ($loop->first)
-                                <option value="{{ $course->id }}" selected>{{ $course->name }}</option>
-                                @else
-                                    <option value="{{ $course->id }}">{{ $course->name }}</option>
-                                @endif
+                                <option value="{{ $course->id }}">{{ $course->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -184,6 +182,7 @@
                 },
             },
             {data: 'name', name: 'name'},
+            {data: 'email', name: 'email'},
             {
                 data: 'courses',
                 name: 'courses',
@@ -199,6 +198,12 @@
                     }
                     return "Aucune";
                 }
+            },
+            {
+                data: 'status',
+                name: 'status',
+                orderable: false,
+                searchable: false,
             },
             {
                 data: 'action', 
