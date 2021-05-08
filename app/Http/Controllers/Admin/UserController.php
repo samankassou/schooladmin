@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\DataTables;
 
@@ -69,13 +71,18 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $password = bcrypt('password');
+        $password = Str::random(8);
+        $EncryptedPassword = bcrypt($password);
         
-        $user = User::create($request->validated() + ['password' => $password]);
+        $user = User::create($request->validated() + ['password' => $EncryptedPassword]);
         if($request->hasFile('avatar')){
             $user->addMediaFromRequest('avatar')->toMediaCollection('avatars', 'public');
         }
         $user->assignRole(Role::findById($request->role)->name);
+
+        $user->password = $password;
+        Mail::to($user)->send(new WelcomeEmail($user));
+
         return response()->json(['message' => 'User created successfully!']);
     }
 

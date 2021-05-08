@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Models\Course;
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
@@ -52,11 +55,14 @@ class TeacherController extends Controller
      */
     public function store(StoreTeacherRequest $request)
     {
+        $password = Str::random(8);
+        $EncryptedPassword = bcrypt($password);
+
         $teacher = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'status' => true,
-            'password' => bcrypt('passsword')
+            'password' => $EncryptedPassword
         ]);
         if($request->hasFile('avatar')){
             $teacher->addMediaFromRequest('avatar')->toMediaCollection('avatars', 'public');
@@ -64,6 +70,8 @@ class TeacherController extends Controller
         $teacher->courses()->attach($request->courses);
         $teacher->assignRole('Enseignant');
 
+        $teacher->password = $password;
+        Mail::to($teacher)->send(new WelcomeEmail($teacher));
         return response()->json(['message' => 'Teacher created successfully!']);
     }
 
