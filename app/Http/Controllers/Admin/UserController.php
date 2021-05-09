@@ -81,7 +81,7 @@ class UserController extends Controller
         $user->assignRole(Role::findById($request->role)->name);
 
         $user->password = $password;
-        Mail::to($user)->send(new WelcomeEmail($user));
+        //Mail::to($user)->send(new WelcomeEmail($user));
 
         return response()->json(['message' => 'User created successfully!']);
     }

@@ -92,7 +92,64 @@
     </div>
 </div>
 {{--! Create teacher modal --}}
+{{-- Edit teacher modal --}}
+<div class="modal fade text-left" id="edit-teacher-modal" tabindex="-1" aria-labelledby="myModalLabel33" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel33">Modifier un enseignant </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="update-teacher-form">
+                    <input type="hidden" id="teacherId">
+                    <label for="name">Nom(s): </label>
+                    <div class="form-group">
+                        <input type="text" id="edit-name" placeholder="Nom(s)" class="form-control" name="name">
+                        <div class="invalid-feedback" id="edit-name-error">
+                            
+                        </div>
+                    </div>
+                    
+                    <label>Email: </label>
+                    <div class="form-group">
+                        <input id="edit-email" type="email" placeholder="Email" class="form-control" name="email">
+                        <div class="invalid-feedback" id="edit-email-error">
+                            
+                        </div>
+                    </div>
 
+                    <label>Photo: </label>
+                    <div class="form-group">
+                        <input id="edit-avatar" type="file" class="form-control" name="avatar">
+                        <div class="invalid-feedback" id="edit-avatar-error">
+                            
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mb-2">
+                        <img id="edit-preview-image-before-upload" src="https://www.riobeauty.co.uk/images/product_image_not_found.gif"
+                            alt="preview image" style="max-height: 250px;">
+                       <br> <span class="btn" id="edit-remove-img" onclick="removeEditImg" style="display: none">Retirer</span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Annuler</span>
+                </button>
+                <button id="update-teacher-btn" type="button" class="btn btn-primary ml-1">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Enregistrer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{{--! Edit teacher modal --}}
 <div class="modal-danger me-1 mb-1 d-inline-block">
     <!--Danger theme Modal -->
     <div class="modal fade text-left" id="delete-teacher-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
@@ -137,6 +194,7 @@
         });
 
         $('#delete-teacher-btn').click(deleteTeacher);
+        $('#update-teacher-btn').click(updateTeacher);
 
         $('#remove-img').click(function(){
             $('#preview-image-before-upload').attr('src', "https://www.riobeauty.co.uk/images/product_image_not_found.gif");
@@ -253,6 +311,50 @@
         return false;
     });
 
+    function updateTeacher()
+    {
+        removeErrorMessages();
+        var id = $('#teacherId').val();
+        var data = new FormData($('#update-teacher-form')[0]);
+        data.append('_method', 'PATCH');
+        $.ajax({
+            method: "POST",
+            url: "/admin/teachers/"+id,
+            data: data,
+            async: false,
+            cache: false,
+            enctypeType: 'multipart/form-data',
+            contentType:false,
+            processData: false,
+            beforeSend: function(){
+                $('#update-teacher-btn').addClass('disabled').text('Enregistrement...').attr('disabled', true);
+            },
+            success: function(response){
+                reset_modal();
+                $('#edit-teacher-modal').modal('hide');
+                table.ajax.reload(null, false);
+                Toastify({
+                    text: "Informations enregistrées avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
+            },
+            error: function(response){
+                var errors = response.responseJSON.errors;
+                for (const error in errors) {
+                    $('#'+error+'-error').html(errors[error][0]).show();
+                }
+            },
+            complete: function(){
+                $('#update-teacher-btn').removeClass('disabled').attr('disabled', false).text('Enregistrer');
+            }
+        });
+        return false;
+    }
+
     function showDeleteTeacherModal(id)
     {
         $('#delete-teacher-modal input[type="hidden"]').val(id);
@@ -284,6 +386,28 @@
         return false;
     }
 
+    function showEditTeacherModal(id)
+    {
+        $('#teacherId').val(id);
+        $.ajax({
+            url: "/admin/teachers/"+id+"/edit",
+                success: function(response){
+                    let teacher = response.teacher;
+                    $('#edit-name').val(teacher.name);
+                    $('#edit-email').val(teacher.email);
+                    if(teacher.avatar_url){
+                        $('#edit-preview-image-before-upload').attr('src', teacher.avatar_url);
+                        $('#edit-remove-img').show();
+                    }
+                },
+                error: function(response){
+                    console.log(response);
+                }
+        });
+        return false;
+        
+    }
+
     function reset_modal()
     {
         $('#create-teacher-form').trigger("reset");
@@ -291,6 +415,11 @@
         $("[id$='-error']").html('');
         $('#remove-img').css('display', 'none');
         $('#preview-image-before-upload').attr('src', "https://www.riobeauty.co.uk/images/product_image_not_found.gif");
+    }
+
+    function removeErrorMessages()
+    {
+        $("[id$='-error']").html('');
     }
 </script>
 @endsection

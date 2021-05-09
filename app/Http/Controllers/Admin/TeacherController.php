@@ -36,7 +36,7 @@ class TeacherController extends Controller
                     return $btn;
                 })
                 ->addColumn('action', function($teacher){
-                    $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-teacher-modal' onclick='edit_teacher(".$teacher->id.")'><i class='bi bi-pencil'></i></button>";
+                    $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-teacher-modal' onclick='showEditTeacherModal(".$teacher->id.")'><i class='bi bi-pencil'></i></button>";
                     $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-teacher-modal' onclick='showDeleteTeacherModal(".$teacher->id.")'><i class='bi bi-trash'></i></button>";
                     return $actionBtns;
                 })
@@ -71,8 +71,23 @@ class TeacherController extends Controller
         $teacher->assignRole('Enseignant');
 
         $teacher->password = $password;
-        Mail::to($teacher)->send(new WelcomeEmail($teacher));
+        //Mail::to($teacher)->send(new WelcomeEmail($teacher));
         return response()->json(['message' => 'Teacher created successfully!']);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $teacher = User::find($id);
+        $teacher->avatar_url = !empty($teacher->avatar) ? $teacher->avatar->getUrl('avatar-thumb') : null;
+        return response()->json([
+            'teacher' => $teacher
+        ]);
     }
 
     /**
@@ -95,7 +110,13 @@ class TeacherController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $teacher = User::find($id);
+        $teacher->name = $request->name;
+        $teacher->email = $request->email;
+        $teacher->save();
+        return response()->json([
+            'message' => 'Teacher created successfully!',
+        ]);
     }
 
     /**
