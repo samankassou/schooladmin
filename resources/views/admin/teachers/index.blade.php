@@ -408,6 +408,22 @@
         
     }
 
+    function toggleTeacherStatus(id)
+    {
+        $.ajax({
+                method: "POST",
+                url: "/admin/teachers/"+id+"/toggleTeacherStatus",
+                dataType: "JSON",
+                success: function(response){
+                    console.log(response);
+                },
+                error: function(response){
+                    console.log(response);
+                }
+            });
+            return false;
+    }
+
     function reset_modal()
     {
         $('#create-teacher-form').trigger("reset");

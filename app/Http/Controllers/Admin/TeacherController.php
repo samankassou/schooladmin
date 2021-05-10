@@ -119,6 +119,13 @@ class TeacherController extends Controller
         ]);
     }
 
+    public function toggleTeacherStatus(User $teacher)
+    {
+        $teacher->status = !$teacher->status;
+        $teacher->save();
+        return response()->json(['message' => 'Teacher\'s status updated']);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

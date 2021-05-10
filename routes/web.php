@@ -32,6 +32,7 @@ Route::group([
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
     Route::resource('students', StudentController::class);
+    Route::post('teachers/{teacher}/toggleTeacherStatus', [TeacherController::class, 'toggleTeacherStatus']);
     Route::resource('roles', RoleController::class);
     Route::resource('classrooms', ClassroomController::class);
     Route::resource('teachers', TeacherController::class);
