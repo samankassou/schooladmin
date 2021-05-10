@@ -15,6 +15,7 @@
                     <h5 class="card-title">Noms: {{ $user->name }}</h5>
                     <h5 class="card-title">Email: {{ $user->email }}</h5>
                     <h5 class="card-title">Statut: {{ $user->status == 1?'Actif':'Inactif' }}</h5>
+                    <h5 class="card-title">Poste: {{ $user->roles[0]->name }}</h5>
                     
                 </div>
             </div>

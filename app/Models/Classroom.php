@@ -25,4 +25,9 @@ class Classroom extends Model
     {
         return $this->belongsToMany(Classroom::class, 'school_path', 'student_id', 'classroom_id');
     }
+
+    public function headTeacher()
+    {
+        return $this->hasOne(User::class, 'id', 'head_teacher');
+    }
 }

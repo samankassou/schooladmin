@@ -95,7 +95,7 @@
                             <i class="bi bi-justify fs-3"></i>
                         </a>
                         <small class="text-sm ml-2">
-                            {{ $academicYear->name }}
+                           Année:{{ $academicYear->name }}
                         </small>
 
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

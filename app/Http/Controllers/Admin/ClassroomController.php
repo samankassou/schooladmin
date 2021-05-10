@@ -7,6 +7,8 @@ use App\Models\Classroom;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\AcademicYear;
+use App\Models\Level;
+use App\Models\User;
 
 class ClassroomController extends Controller
 {
@@ -18,7 +20,7 @@ class ClassroomController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return Datatables::of(Classroom::where('academic_year_id', AcademicYear::current()->id)->with(['level'])->get())
+            return Datatables::of(Classroom::where('academic_year_id', AcademicYear::current()->id)->with(['level', 'headTeacher'])->get())
                 ->addIndexColumn()
                 ->addColumn('action', function(Classroom $classroom){
                     $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-classroom-modal' onclick='edit_Classroom(".$classroom->id.")'><i class='bi bi-pencil'></i></button>";
@@ -28,7 +30,9 @@ class ClassroomController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('admin.classrooms.index');
+        $levels = Level::all();
+        $teachers = User::role('Enseignant')->get();
+        return view('admin.classrooms.index', compact('levels', 'teachers'));
     }
 
     /**
