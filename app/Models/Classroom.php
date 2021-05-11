@@ -9,6 +9,8 @@ class Classroom extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'level_id', 'academic_year_id', 'head_teacher'];
+
     public $timestamps = false;
 
     public function academicYear()

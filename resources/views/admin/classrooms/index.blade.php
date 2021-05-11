@@ -36,7 +36,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="#" id="create-user-form">
+                <form action="#" id="create-classroom-form">
 
                     <label>Niveau: </label>
                     <div class="form-group">
@@ -46,26 +46,29 @@
                                 <option value="{{ $level->id }}">{{ $level->name }}</option>
                             @endforeach
                         </select>
-                        <div class="invalid-feedback" id="role-error">
+                        <div class="invalid-feedback" id="level-error">
                             
                         </div>
                     </div>
 
                     <label for="name">Nom: </label>
                     <div class="input-group mb-3">
-                        <span class="input-group-text"></span>
-                        <input type="text" class="form-control" name="name" aria-label="name">
+                        <span class="input-group-text" id="classroomNameAddOn"></span>
+                        <input type="text" class="form-control" placeholder="A, B ou 1, 2 ..." name="name" id="name" aria-label="name">
+                    </div>
+                    <div class="invalid-feedback" id="name-error">
+                            
                     </div>
 
                     <label>Professeur principal: </label>
                     <div class="form-group">
-                        <select class="choices" name="level" id="level">
+                        <select class="choices" name="head_teacher" id="teacher">
                             <option value="">Choisir un enseignant</option>
                             @foreach ($teachers as $teacher)
                                 <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                             @endforeach
                         </select>
-                        <div class="invalid-feedback" id="role-error">
+                        <div class="invalid-feedback" id="head_teacher-error">
                             
                         </div>
                     </div>
@@ -76,7 +79,7 @@
                     <i class="bx bx-x d-block d-sm-none"></i>
                     <span class="d-none d-sm-block">Annuler</span>
                 </button>
-                <button id="save-user-btn" type="button" class="btn btn-primary ml-1">
+                <button id="save-classroom-btn" type="button" class="btn btn-primary ml-1">
                     <i class="bx bx-check d-block d-sm-none"></i>
                     <span class="d-none d-sm-block">Enregistrer</span>
                 </button>
@@ -128,5 +131,58 @@
             },
         ]
     });
+    $('#level').on('change', changeClassroomNameLabel);
+    $('#save-classroom-btn').on('click', saveClassroom);
+    $('#create-classroom-modal').on('hide.bs.modal', resetModal);
+
+    function changeClassroomNameLabel(e)
+    {
+        let level = e.target,
+        addOn = document.getElementById('classroomNameAddOn');
+        addOn.innerText = level.innerText;
+    }
+    function saveClassroom(e)
+    {
+        $(this).addClass('disabled').text('Enregistrement...').attr('disabled', true);
+        let name = $('#name').val();
+        let levelName = document.getElementById('classroomNameAddOn').innerText;
+        $('#name').val(levelName +' '+ name);
+        let data = $('#create-classroom-form').serialize();
+        $.ajax({
+            url: "{{ route('admin.classrooms.store') }}",
+            method: "POST",
+            data: data,
+            success: (response)=>{
+                resetModal();
+                $('#create-classroom-modal').modal('hide');
+                table.ajax.reload(null, false);
+                Toastify({
+                    text: "Classe enregistrée avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
+            },
+            error: (response)=>{
+                let errors = response.responseJSON.errors;
+                for (const error in errors) {
+                    $('#'+error+'-error').html(errors[error][0]).show();
+                }
+            },
+            complete: ()=>{
+                $('#save-classroom-btn').removeClass('disabled').text('Enregistrer').attr('disabled', false);
+            }
+        });
+        return false;
+    }
+
+    function resetModal()
+    {
+        $('#create-classroom-form').trigger("reset");
+        //$('#edit-classroom-form').trigger("reset");
+        $("[id$='-error']").html('');
+    }
 </script>
 @endsection

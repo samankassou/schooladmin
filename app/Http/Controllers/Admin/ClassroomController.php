@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\Level;
 use App\Models\Classroom;
+use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use App\Models\AcademicYear;
-use App\Models\Level;
-use App\Models\User;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreClassroomRequest;
 
 class ClassroomController extends Controller
 {
@@ -51,9 +52,15 @@ class ClassroomController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreClassroomRequest $request)
     {
-        //
+        Classroom::create([
+            'name' => $request->name,
+            'level_id' => $request->level,
+            'academic_year_id' => AcademicYear::current()->id,
+            'head_teacher' => $request->head_teacher
+        ]);
+        return response()->json(['message' => 'Classroom created successfully!']);
     }
 
     /**
