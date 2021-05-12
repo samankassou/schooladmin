@@ -48,6 +48,13 @@
                             </a>
                         </li>
 
+                        <li class="sidebar-item  {{ request()->routeIs('admin.cycles.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.cycles.index') }}" class='sidebar-link'>
+                                <i class="bi bi-people-fill"></i>
+                                <span>Cycles</span>
+                            </a>
+                        </li>
+
                         <li class="sidebar-item  {{ request()->routeIs('admin.levels.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.levels.index') }}" class='sidebar-link'>
                                 <i class="bi bi-people-fill"></i>
