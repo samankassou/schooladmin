@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\LevelController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeacherController;
@@ -32,6 +33,7 @@ Route::group([
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
     Route::resource('students', StudentController::class);
+    Route::resource('levels', LevelController::class);
     Route::post('teachers/{teacher}/toggleTeacherStatus', [TeacherController::class, 'toggleTeacherStatus']);
     Route::resource('roles', RoleController::class);
     Route::resource('classrooms', ClassroomController::class);

@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCourseRequest;
-use SebastianBergmann\Environment\Console;
 
 class CourseController extends Controller
 {
