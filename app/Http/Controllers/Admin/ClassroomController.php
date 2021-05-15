@@ -25,7 +25,7 @@ class ClassroomController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function(Classroom $classroom){
                     $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-classroom-modal' onclick='edit_Classroom(".$classroom->id.")'><i class='bi bi-pencil'></i></button>";
-                    $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-classroom-modal' onclick='delete_Classroom(".$classroom->id.")'><i class='bi bi-trash'></i></button>";
+                    $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-classroom-modal' onclick='showDeleteClassroomModal(".$classroom->id.")'><i class='bi bi-trash'></i></button>";
                     return $actionBtns;
                 })
                 ->rawColumns(['action'])
@@ -105,6 +105,11 @@ class ClassroomController extends Controller
      */
     public function destroy(Classroom $classroom)
     {
-        //
+        if(count($classroom->students) != 0){
+            return response()->json(['success' => false, 'message' => 'This Classroom has some students!']);
+        }
+
+        $classroom->delete();
+        return response()->json(['success' => true, 'message' => 'Classroom deleted successfully!']);
     }
 }

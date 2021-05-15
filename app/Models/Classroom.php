@@ -25,7 +25,7 @@ class Classroom extends Model
 
     public function students()
     {
-        return $this->belongsToMany(Classroom::class, 'school_path', 'student_id', 'classroom_id');
+        return $this->belongsToMany(Student::class, 'school_path', 'classroom_id', 'student_id');
     }
 
     public function headTeacher()

@@ -88,6 +88,40 @@
     </div>
 </div>
 {{--! Create classroom modal --}}
+{{-- Delete classroom modal --}}
+<div class="modal-danger me-1 mb-1 d-inline-block">
+    <!--Danger theme Modal -->
+    <div class="modal fade text-left" id="delete-classroom-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <form id="delete-classroom-form" method="POST" action="" class="modal-content">
+                @csrf
+                @method('DELETE')
+                <div class="modal-header bg-danger">
+                    <h5 class="modal-title white" id="myModalLabel120">
+                        Supprimer une salle de classe
+                    </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <i data-feather="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Voulez-vous vraiment supprimer?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                        <i class="bx bx-x d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Annuler</span>
+                    </button>
+                    <button id="delete-classroom-btn" type="button" class="btn btn-danger ml-1" data-bs-dismiss="modal">
+                        <i class="bx bx-check d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">supprimer</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{--! Delete classroom modal --}}
 @endsection
 @section('scripts')
 @parent
@@ -133,6 +167,7 @@
     });
     $('#level').on('change', changeClassroomNameLabel);
     $('#save-classroom-btn').on('click', saveClassroom);
+    $('#delete-classroom-btn').on('click', deleteClassroom);
     $('#create-classroom-modal').on('hide.bs.modal', resetModal);
 
     function changeClassroomNameLabel(e)
@@ -173,6 +208,55 @@
             },
             complete: ()=>{
                 $('#save-classroom-btn').removeClass('disabled').text('Enregistrer').attr('disabled', false);
+            }
+        });
+        return false;
+    }
+
+    function showDeleteClassroomModal(id)
+    {
+        $('#delete-classroom-modal input[type="hidden"]').val(id);
+    }
+
+    function deleteClassroom(e)
+    {
+        var id = $('#delete-classroom-modal input[type="hidden"]').val();
+        $(this).addClass('disabled').text('Enregistrement...').attr('disabled', true);
+        $.ajax({
+            url: "/admin/classrooms/"+id,
+            method: "POST",
+            data: {_method: "DELETE"},
+            success: (response)=>{
+                console.log(response);
+                if(response.success){
+                    table.ajax.reload(null, false);
+                    Toastify({
+                        text: "Classe supprimée avec succès!",
+                        duration: 3000,
+                        close:true,
+                        gravity:"top",
+                        position: "right",
+                        backgroundColor: "#4fbe87",
+                    }).showToast();
+                }else{
+                    Toastify({
+                        text: "Cette classe est liée à certains élèves!",
+                        duration: 3000,
+                        close:true,
+                        gravity:"top",
+                        position: "right",
+                        backgroundColor: "#ff0000",
+                    }).showToast();
+                }
+            },
+            error: (response)=>{
+                let errors = response.responseJSON.errors;
+                for (const error in errors) {
+                    $('#'+error+'-error').html(errors[error][0]).show();
+                }
+            },
+            complete: ()=>{
+                $('#delete-classroom-btn').removeClass('disabled').text('Enregistrer').attr('disabled', false);
             }
         });
         return false;

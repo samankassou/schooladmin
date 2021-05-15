@@ -10,4 +10,18 @@ class Cycle extends Model
     use HasFactory;
 
     public $timestamps = false;
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($cycle){
+            $cycle->levels()->delete();
+        });
+    }
+
+    public function levels()
+    {
+        return $this->hasMany(Level::class);
+    }
 }
