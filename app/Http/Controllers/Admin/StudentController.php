@@ -37,31 +37,6 @@ class StudentController extends Controller
         $classrooms = Classroom::where(['academic_year_id' => AcademicYear::current()->id])->get();
         return view('admin.students.index', compact('classrooms'));
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function list(Request $request)
-    {
-        $query = Student::query();
-        if($request->classroom_id)
-        {
-            $query->classrooms()->where('id', $request->classroom_id);
-        }
-
-        return StudentResource::collection($query->get());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -84,7 +59,7 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        return view('admin.students.show', compact('student'));
     }
 
     /**
