@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Cycle;
-use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCycleRequest;
 
 class CycleController extends Controller
 {
@@ -46,9 +47,10 @@ class CycleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCycleRequest $request)
     {
-        //
+        Cycle::create($request->validated());
+        return response()->json(['message' => 'cycle created duccessfully!'], 201);
     }
 
     /**

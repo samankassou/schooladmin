@@ -281,7 +281,6 @@
             data: data,
             async: false,
             cache: false,
-            enctypeType: 'multipart/form-data',
             contentType:false,
             processData: false,
             success: function(response){
@@ -303,9 +302,8 @@
                     $('#'+error+'-error').html(errors[error][0]).show();
                 }
             },
-            complete: function(response){
+            complete: ()=>{
                 $('#save-teacher-btn').removeClass('disabled').text('Enregistrer').attr('disabled', false);
-                console.log('complete');
             }
         });
         return false;

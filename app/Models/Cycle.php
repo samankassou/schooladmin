@@ -9,6 +9,8 @@ class Cycle extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name'];
+
     public $timestamps = false;
 
     public static function boot()
