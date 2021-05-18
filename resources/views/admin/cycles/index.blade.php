@@ -52,7 +52,40 @@
         </div>
     </div>
 </div>
-{{--! Create classroom modal --}}
+{{--! Create cycle modal --}}
+
+{{-- Delete cycle modal --}}
+<div class="modal-danger me-1 mb-1 d-inline-block">
+    <div class="modal fade text-left" id="delete-cycle-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <form id="delete-cycle-form" method="POST" action="" class="modal-content">
+                <div class="modal-header bg-danger">
+                    <h5 class="modal-title white" id="myModalLabel120">
+                        Supprimer un Cycle
+                    </h5>
+                    <input type="hidden">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <i data-feather="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Voulez-vous vraiment supprimer?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                        <i class="bx bx-x d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Annuler</span>
+                    </button>
+                    <button id="delete-cycle-btn" type="button" class="btn btn-danger ml-1" data-bs-dismiss="modal">
+                        <i class="bx bx-check d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">supprimer</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{--! Delete cycle modal --}}
 @endsection
 @section('scripts')
 @parent
@@ -86,6 +119,7 @@ $(function () {
         ]
     });
     $('#save-cycle-btn').on('click', saveCycle);
+    $('#delete-cycle-btn').on('click', deleteCycle);
 
     function saveCycle()
     {
@@ -116,6 +150,52 @@ $(function () {
             },
             complete: ()=>{
                 $('#save-cycle-btn').removeClass('disabled').text('Enregistrer').attr('disabled', false);
+            }
+        });
+        return false;
+    }
+
+    function showDeleteCycleModal(id)
+    {
+        $('#delete-cycle-modal input[type="hidden"]').val(id);
+    }
+
+    function deleteCycle(e)
+    {
+        var id = $('#delete-cycle-modal input[type="hidden"]').val();
+        $(this).addClass('disabled').text('Suppression...').attr('disabled', true);
+        $.ajax({
+            url: "/admin/cycles/"+id,
+            method: "POST",
+            data: {_method: "DELETE"},
+            success: (response)=>{
+                console.log(response);
+                if(response.success){
+                    table.ajax.reload(null, false);
+                    Toastify({
+                        text: "Cycle supprimé avec succès!",
+                        duration: 3000,
+                        close:true,
+                        gravity:"top",
+                        position: "right",
+                        backgroundColor: "#4fbe87",
+                    }).showToast();
+                }else{
+                    Toastify({
+                        text: "Ce cycle est utilisé",
+                        duration: 3000,
+                        close:true,
+                        gravity:"top",
+                        position: "right",
+                        backgroundColor: "#ff0000",
+                    }).showToast();
+                }
+            },
+            error: (response)=>{
+                
+            },
+            complete: ()=>{
+                $('#delete-cycle-btn').removeClass('disabled').text('Supprimer').attr('disabled', false);
             }
         });
         return false;

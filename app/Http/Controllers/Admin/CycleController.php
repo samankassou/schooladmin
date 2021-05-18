@@ -95,6 +95,11 @@ class CycleController extends Controller
      */
     public function destroy(Cycle $cycle)
     {
-        //
+        if(count($cycle->levels) != 0){
+            return response()->json(['success' => false, 'message' => 'This Cycle has some levels!']);
+        }
+
+        $cycle->delete();
+        return response()->json(['success' => true, 'message' => 'Cycle deleted successfully!']);
     }
 }
