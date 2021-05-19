@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Cycle;
 use App\Models\Level;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreLevelRequest;
 
 class LevelController extends Controller
 {
@@ -20,14 +22,15 @@ class LevelController extends Controller
             return Datatables::of(Level::with('cycle')->get())
                 ->addIndexColumn()
                 ->addColumn('action', function($level){
-                    $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-level-modal' onclick='edit_level(".$level->id.")'><i class='bi bi-pencil'></i></button>";
+                    $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-level-modal' onclick='showEditLevelModal(".$level->id.")'><i class='bi bi-pencil'></i></button>";
                     $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-level-modal' onclick='showDeleteLevelModal(".$level->id.")'><i class='bi bi-trash'></i></button>";
                     return $actionBtns;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('admin.levels.index');
+        $cycles = Cycle::all();
+        return view('admin.levels.index', compact('cycles'));
     }
 
     /**
@@ -46,9 +49,14 @@ class LevelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreLevelRequest $request)
     {
-        //
+        $level = new Level;
+        $level->name = $request->name;
+        $level->cycle_id = $request->cycle;
+        $level->save();
+        
+        return response()->json(['message' => 'Level saved successfully!']);
     }
 
     /**

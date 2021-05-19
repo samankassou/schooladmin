@@ -11,6 +11,8 @@ class Level extends Model
 
     public $timestamps = false;
 
+    protected $fillable = ['name', 'cycle_id'];
+
     public function cycle()
     {
         return $this->belongsTo(Cycle::class);
