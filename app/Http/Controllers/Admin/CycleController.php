@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCycleRequest;
+use App\Http\Requests\UpdateCycleRequest;
 
 class CycleController extends Controller
 {
@@ -21,7 +22,7 @@ class CycleController extends Controller
             return Datatables::of(Cycle::all('id', 'name'))
                 ->addIndexColumn()
                 ->addColumn('action', function($cycle){
-                    $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-cycle-modal' onclick='edit_cycle(".$cycle->id.")'><i class='bi bi-pencil'></i></button>";
+                    $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-cycle-modal' onclick='showEditCycleModal(".$cycle->id.")'><i class='bi bi-pencil'></i></button>";
                     $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-cycle-modal' onclick='showDeleteCycleModal(".$cycle->id.")'><i class='bi bi-trash'></i></button>";
                     return $actionBtns;
                 })
@@ -29,16 +30,6 @@ class CycleController extends Controller
                 ->make(true);
         }
         return view('admin.cycles.index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -72,7 +63,7 @@ class CycleController extends Controller
      */
     public function edit(Cycle $cycle)
     {
-        //
+        return response()->json(['cycle' => $cycle]);
     }
 
     /**
@@ -82,9 +73,10 @@ class CycleController extends Controller
      * @param  \App\Models\Cycle  $cycle
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cycle $cycle)
+    public function update(UpdateCycleRequest $request, Cycle $cycle)
     {
-        //
+        $cycle->update($request->validated());
+        return response()->json(['message' => 'Cycle updated successfully!']);
     }
 
     /**
