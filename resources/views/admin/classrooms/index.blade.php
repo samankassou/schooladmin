@@ -88,6 +88,69 @@
     </div>
 </div>
 {{--! Create classroom modal --}}
+{{-- Edit classroom modal --}}
+<div class="modal fade text-left" id="edit-classroom-modal" tabindex="-1" aria-labelledby="myModalLabel33" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel33">Modifier une classe </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="update-classrom-form">
+                    <input type="hidden" id="id">
+
+                    <label>Niveau: </label>
+                    <div class="form-group">
+                        <select class="choices" name="level" id="edit-level">
+                            <option value="">Choisir un niveau</option>
+                            @foreach ($levels as $level)
+                                <option value="{{ $level->id }}">{{ $level->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback" id="edit-level-error">
+                            
+                        </div>
+                    </div>
+
+                    <label for="name">Nom: </label>
+                    <div class="form-group">
+                        <input type="text" id="edit-name" placeholder="Nom" class="form-control" name="name">
+                        <div class="invalid-feedback" id="edit-name-error">
+                            
+                        </div>
+                    </div>
+
+                    <label>Professeur principal: </label>
+                    <div class="form-group">
+                        <select class="choices" name="head_teacher" id="edit-teacher">
+                            <option value="">Choisir un enseignant</option>
+                            @foreach ($teachers as $teacher)
+                                <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback" id="edit-head_teacher-error">
+                            
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Annuler</span>
+                </button>
+                <button id="update-classroom-btn" type="button" class="btn btn-primary ml-1">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Enregistrer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{{--! Edit level modal --}}
 {{-- Delete classroom modal --}}
 <div class="modal-danger me-1 mb-1 d-inline-block">
     <!--Danger theme Modal -->
@@ -168,7 +231,9 @@
     $('#level').on('change', changeClassroomNameLabel);
     $('#save-classroom-btn').on('click', saveClassroom);
     $('#delete-classroom-btn').on('click', deleteClassroom);
+    $('#update-classroom-btn').on('click', updateClassroom);
     $('#create-classroom-modal').on('hide.bs.modal', resetModal);
+    $('#edit-classroom-modal').on('hide.bs.modal', resetModal);
 
     function changeClassroomNameLabel(e)
     {
@@ -176,6 +241,23 @@
         addOn = document.getElementById('classroomNameAddOn');
         addOn.innerText = level.innerText;
     }
+    function showEditClassroomModal(id)
+    {
+        $('#id').val(id);
+        $.ajax({
+            url: "/admin/classrooms/"+id+"/edit",
+                success: function(response){
+                    let classroom = response.classroom;
+                    $('#edit-name').val(classroom.name);
+                },
+                error: function(response){
+                    console.log(response);
+                }
+        });
+        return false;
+        
+    }
+
     function saveClassroom(e)
     {
         $(this).addClass('disabled').text('Enregistrement...').attr('disabled', true);
@@ -262,10 +344,53 @@
         return false;
     }
 
+    function updateClassroom()
+    {
+        $(this).addClass('disabled').text('Enregistrement...').attr('disabled', true);
+        removeErrorMessages();
+        let id = $('#id').val(),
+        name = $('#edit-name').val(),
+        level = $('#edit-level').val(),
+        head_teacher = $('#edit-teacher').val();
+        $.ajax({
+            method: "POST",
+            url: "/admin/classrooms/"+id,
+            data: {_method: 'PATCH', name: name, level: level, head_teacher: head_teacher},
+            success: function(response){
+                resetModal();
+                $('#edit-classroom-modal').modal('hide');
+                table.ajax.reload(null, false);
+                Toastify({
+                    text: "Informations enregistrées avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
+            },
+            error: function(response){
+                var errors = response.responseJSON.errors;
+                for (const error in errors) {
+                    $('#edit-'+error+'-error').html(errors[error][0]).show();
+                }
+            },
+            complete: function(){
+                $('#update-classroom-btn').removeClass('disabled').attr('disabled', false).text('Enregistrer');
+            }
+        });
+        return false;
+    }
+
     function resetModal()
     {
         $('#create-classroom-form').trigger("reset");
-        //$('#edit-classroom-form').trigger("reset");
+        $('#edit-classroom-form').trigger("reset");
+        $("[id$='-error']").html('');
+    }
+
+    function removeErrorMessages()
+    {
         $("[id$='-error']").html('');
     }
 </script>

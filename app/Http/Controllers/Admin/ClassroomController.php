@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreClassroomRequest;
+use App\Http\Requests\UpdateClassroomRequest;
 
 class ClassroomController extends Controller
 {
@@ -24,7 +25,7 @@ class ClassroomController extends Controller
             return Datatables::of(Classroom::where('academic_year_id', AcademicYear::current()->id)->with(['level', 'headTeacher'])->get())
                 ->addIndexColumn()
                 ->addColumn('action', function(Classroom $classroom){
-                    $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-classroom-modal' onclick='edit_Classroom(".$classroom->id.")'><i class='bi bi-pencil'></i></button>";
+                    $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-classroom-modal' onclick='showEditClassroomModal(".$classroom->id.")'><i class='bi bi-pencil'></i></button>";
                     $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-classroom-modal' onclick='showDeleteClassroomModal(".$classroom->id.")'><i class='bi bi-trash'></i></button>";
                     return $actionBtns;
                 })
@@ -34,16 +35,6 @@ class ClassroomController extends Controller
         $levels = Level::all();
         $teachers = User::role('Enseignant')->get();
         return view('admin.classrooms.index', compact('levels', 'teachers'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -82,7 +73,7 @@ class ClassroomController extends Controller
      */
     public function edit(Classroom $classroom)
     {
-        //
+        return response()->json(['classroom' => $classroom]);
     }
 
     /**
@@ -92,9 +83,13 @@ class ClassroomController extends Controller
      * @param  \App\Models\Classroom  $classroom
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Classroom $classroom)
+    public function update(UpdateClassroomRequest $request, Classroom $classroom)
     {
-        //
+        $classroom->name = $request->name;
+        $classroom->level_id = $request->level;
+        $classroom->head_teacher = $request->head_teacher;
+        $classroom->save();
+        return response()->json(['message' => 'Classroom updated successfully!']);
     }
 
     /**

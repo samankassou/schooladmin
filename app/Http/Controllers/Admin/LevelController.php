@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLevelRequest;
+use App\Http\Requests\UpdateLevelRequest;
 
 class LevelController extends Controller
 {
@@ -78,7 +79,7 @@ class LevelController extends Controller
      */
     public function edit(Level $level)
     {
-        //
+        return response()->json(['level' => $level]);
     }
 
     /**
@@ -88,9 +89,12 @@ class LevelController extends Controller
      * @param  \App\Models\Level  $level
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Level $level)
+    public function update(UpdateLevelRequest $request, Level $level)
     {
-        //
+        $level->name = $request->name;
+        $level->cycle_id = $request->cycle;
+        $level->save();
+        return response()->json(['message' => 'Level updated successfully!']);
     }
 
     /**
@@ -101,6 +105,11 @@ class LevelController extends Controller
      */
     public function destroy(Level $level)
     {
-        //
+        if(count($level->classrooms) != 0){
+            return response()->json(['success' => false, 'message' => 'This Level has some classrooms!']);
+        }
+
+        $level->delete();
+        return response()->json(['success' => true, 'message' => 'Level deleted successfully!']);
     }
 }

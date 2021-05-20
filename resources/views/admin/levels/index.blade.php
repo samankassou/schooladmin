@@ -86,6 +86,20 @@
             <div class="modal-body">
                 <form action="#" id="update-cycle-form">
                     <input type="hidden" id="id">
+
+                    <label>Cycle: </label>
+                    <div class="form-group">
+                        <select class="choices" name="cycle" id="edit-cycle">
+                            <option value="">Choisir un cycle</option>
+                            @foreach ($cycles as $cycle)
+                                <option value="{{ $cycle->id }}">{{ $cycle->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback" id="edit-cycle-error">
+                            
+                        </div>
+                    </div>
+
                     <label for="name">Nom: </label>
                     <div class="form-group">
                         <input type="text" id="edit-name" placeholder="Nom" class="form-control" name="name">
@@ -185,13 +199,12 @@ $(function () {
     $('#save-level-btn').on('click', saveLevel);
     $('#update-level-btn').on('click', updateLevel);
     $('#delete-level-btn').on('click', deleteLevel);
-    $('#create-level-modal, #update-level-modal').on('hide.bs.modal', resetModal);
+    $('#create-level-modal, #edit-level-modal').on('hide.bs.modal', resetModal);
     
     function saveLevel()
     {
         $(this).addClass('disabled').text('Enregistrement...').attr('disabled', true);
         let data = $('#create-level-form').serialize();
-        //console.log(data);return;
         $.ajax({
             url: "{{ route('admin.levels.store') }}",
             method: "POST",
@@ -276,6 +289,7 @@ $(function () {
                 success: function(response){
                     let level = response.level;
                     $('#edit-name').val(level.name);
+                    $('#edit-cycle').val(level.cycle_id);
                 },
                 error: function(response){
                     console.log(response);
@@ -290,14 +304,15 @@ $(function () {
         $(this).addClass('disabled').text('Enregistrement...').attr('disabled', true);
         removeErrorMessages();
         let id = $('#id').val();
-        let name = $('#edit-name').val();
+        let name = $('#edit-name').val(),
+        cycle = $('#edit-cycle').val();
         $.ajax({
             method: "POST",
             url: "/admin/levels/"+id,
-            data: {_method: 'PATCH', name: name},
+            data: {_method: 'PATCH', name: name, cycle: cycle},
             success: function(response){
                 resetModal();
-                $('#edit-cycle-modal').modal('hide');
+                $('#edit-level-modal').modal('hide');
                 table.ajax.reload(null, false);
                 Toastify({
                     text: "Informations enregistrées avec succès!",
