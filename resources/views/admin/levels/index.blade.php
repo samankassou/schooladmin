@@ -40,7 +40,7 @@
                 <form action="#" id="create-level-form">
                     <label>Cycle: </label>
                     <div class="form-group">
-                        <select class="choices" name="cycle" id="cycle">
+                        <select name="cycle" id="cycle">
                             <option value="">Choisir un cycle</option>
                             @foreach ($cycles as $cycle)
                                 <option value="{{ $cycle->id }}">{{ $cycle->name }}</option>
@@ -89,7 +89,7 @@
 
                     <label>Cycle: </label>
                     <div class="form-group">
-                        <select class="choices" name="cycle" id="edit-cycle">
+                        <select name="cycle" id="edit-cycle">
                             <option value="">Choisir un cycle</option>
                             @foreach ($cycles as $cycle)
                                 <option value="{{ $cycle->id }}">{{ $cycle->name }}</option>
@@ -168,6 +168,8 @@ $(function () {
             }
         });
     });
+    var cycleChoice = new Choices(document.getElementById('cycle'));
+    var editCycleChoice = new Choices(document.getElementById('edit-cycle'));
     var table = $('#levels-datatable').DataTable({
         language: {
             url: "{{ asset('vendor/datatables/lang/French.json') }}"
@@ -289,7 +291,7 @@ $(function () {
                 success: function(response){
                     let level = response.level;
                     $('#edit-name').val(level.name);
-                    $('#edit-cycle').val(level.cycle_id);
+                    editCycleChoice.setChoiceByValue(""+level.cycle_id);
                 },
                 error: function(response){
                     console.log(response);

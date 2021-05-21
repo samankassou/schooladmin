@@ -104,7 +104,7 @@
 
                     <label>Niveau: </label>
                     <div class="form-group">
-                        <select class="choices" name="level" id="edit-level">
+                        <select name="level" id="edit-level">
                             <option value="">Choisir un niveau</option>
                             @foreach ($levels as $level)
                                 <option value="{{ $level->id }}">{{ $level->name }}</option>
@@ -125,7 +125,7 @@
 
                     <label>Professeur principal: </label>
                     <div class="form-group">
-                        <select class="choices" name="head_teacher" id="edit-teacher">
+                        <select name="head_teacher" id="edit-teacher">
                             <option value="">Choisir un enseignant</option>
                             @foreach ($teachers as $teacher)
                                 <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
@@ -197,6 +197,8 @@
             }
         });
     });
+    var editLevelChoice = new Choices(document.getElementById('edit-level'));
+    var editTeacher = new Choices(document.getElementById('edit-teacher'));
     var table = $('#classrooms-datatable').DataTable({
         language: {
             url: "{{ asset('vendor/datatables/lang/French.json') }}"
@@ -249,6 +251,8 @@
                 success: function(response){
                     let classroom = response.classroom;
                     $('#edit-name').val(classroom.name);
+                    editLevelChoice.setChoiceByValue(''+classroom.level_id);
+                    editTeacher.setChoiceByValue(''+classroom.head_teacher);
                 },
                 error: function(response){
                     console.log(response);
